@@ -1,0 +1,80 @@
+@use '../01-settings/variables' as *;
+
+// ==========================================================================
+// Generic layout objects
+// ==========================================================================
+
+.o-layout {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.o-layout--horizontal {
+  flex-direction: row;
+}
+
+.o-layout--vertical {
+  flex-direction: column;
+}
+
+.o-layout__main {
+  flex: 1;
+  min-width: 0;
+}
+
+// ==========================================================================
+// Dashboard shell layout
+// ==========================================================================
+
+.o-dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: $color-bg-app;
+}
+
+// First level nav rail - provides the collapsed width space in the layout
+// The actual nav inside positions itself absolutely when expanded
+.o-dashboard-layout__first-level {
+  flex-shrink: 0;
+  width: $nav-first-level-width-collapsed;
+  position: relative;
+  z-index: 20;
+}
+
+// Second level nav panel (slides in/out)
+.o-dashboard-layout__second-level {
+  flex-shrink: 0;
+  width: 0;
+  overflow: hidden;
+  transition: width $transition-slow;
+  z-index: 5;
+}
+
+.o-dashboard-layout__second-level--expanded {
+  width: $nav-second-level-width;
+}
+
+// Main content area
+.o-dashboard-layout__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: $color-bg-app;
+}
+
+.o-dashboard-layout__top-bar {
+  flex-shrink: 0;
+}
+
+.o-dashboard-layout__toolbar {
+  flex-shrink: 0;
+}
+
+.o-dashboard-layout__content {
+  flex: 1;
+  min-height: 0;
+  padding: $spacing-20;
+  display: flex;
+  flex-direction: column;
+}

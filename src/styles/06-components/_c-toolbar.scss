@@ -1,0 +1,32 @@
+@use '../01-settings/variables' as *;
+
+// ==========================================================================
+// Toolbar
+// Figma: search + selectButton group + form items + buttons, collapsible
+// Custom variant wrapping PrimeNG p-toolbar
+// ==========================================================================
+
+.c-toolbar {
+  border-color: $color-border !important;
+  border-radius: 0 !important;
+  padding: $spacing-8 $spacing-16 !important;
+  background-color: $color-bg-surface !important;
+}
+
+.c-toolbar__search {
+  min-width: 14rem;
+}
+
+.c-toolbar__search-input {
+  width: 100%;
+}
+
+.c-toolbar__filters {
+  margin-inline-start: $spacing-12;
+}
+
+.c-toolbar__actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-8;
+}

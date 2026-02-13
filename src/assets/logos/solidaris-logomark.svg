@@ -1,0 +1,41 @@
+<svg width="24" height="26" viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Solidaris logomark - combined from Figma parts -->
+  <g>
+    <!-- Top-left heart shape -->
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M18.2927 2.68801C13.9489 -1.87499 3.83953 8.39241 3.36296 13.9074C2.88379 19.4251 17.6599 26.4051 20.475 21.6553C23.0739 17.2712 21.6312 6.19638 18.2927 2.69064V2.68801ZM17.5843 18.9412C15.6885 22.1603 5.74057 17.4369 6.06349 13.6997C6.38641 9.96513 13.1963 3.01149 16.1208 6.09907C18.3682 8.47131 19.3344 15.9693 17.5843 18.9412Z" fill="#DA002F"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M20.001 1.13895C15.6547 -3.42667 5.54265 6.84336 5.06349 12.361C4.58432 17.8787 19.3656 24.8639 22.1833 20.1115C24.7849 15.7248 23.3396 4.6447 20.001 1.13632V1.13895Z" fill="url(#paint0_top)"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M19.1026 5.26274C14.7562 0.69712 4.64161 10.9671 4.16505 16.4874C3.68588 22.0051 18.4672 28.9903 21.2849 24.238C23.8864 19.8512 22.4411 8.77375 19.1026 5.26537V5.26274Z" fill="url(#paint1_top)"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.9489 1.97265C10.6026 -2.59297 0.49056 7.67706 0.0113918 13.1947C-0.467776 18.7124 14.3135 25.6976 17.1312 20.9452C19.7328 16.5585 18.2875 5.48103 14.9489 1.97265Z" fill="url(#paint2_top)"/>
+    <path d="M10.7377 17.3875L10.2046 23.5418L16.9678 24.1394L17.501 17.9851L10.7377 17.3875Z" fill="url(#paint3_top)"/>
+  </g>
+  <g transform="translate(8.2, 11.3)">
+    <!-- Bottom-right hand/swoosh shape -->
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M3.06942 4.24962C0.126705 8.92307 4.35067 19.1116 8.40537 20.345C12.3038 21.5338 17.3247 12.9522 17.3221 9.83041C17.3221 6.60607 5.83765 -0.147686 3.06942 4.24962ZM9.94964 17.0497C7.62151 15.9793 5.50953 9.80937 7.03036 7.00057C8.54599 4.20228 16.0096 7.85268 16.0252 10.1644C16.0408 12.4236 12.4418 18.1963 9.94964 17.0497Z" fill="#DA002F"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M1.09025 5.70399C-2.21445 10.8009 2.62931 21.255 7.14235 22.2386C11.4236 23.1722 16.8116 13.991 16.7986 10.7825C16.783 7.46607 4.17359 0.951641 1.09025 5.70399Z" fill="url(#paint0_bot)"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M1.34806 1.28302C-1.91757 6.02485 2.84546 17.1996 7.29599 18.7565C11.52 20.2346 16.8455 11.6188 16.8351 8.37341C16.8247 5.01757 4.39234 -3.13796 1.34806 1.28302Z" fill="url(#paint1_bot)"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M6.66318 5.09647C4.37151 9.21237 7.50172 18.1753 10.6996 19.3851C13.8715 20.5844 18.1658 12.776 18.184 9.88564C18.2049 6.90852 8.85589 1.15941 6.66057 5.0991L6.66318 5.09647Z" fill="url(#paint2_bot)"/>
+  </g>
+  <defs>
+    <linearGradient id="paint0_top" x1="16.4346" y1="11.1512" x2="5.10781" y2="13.2548" gradientUnits="userSpaceOnUse">
+      <stop offset="0.25" stop-color="#AB1830" stop-opacity="0"/><stop offset="1" stop-color="#AB1830"/>
+    </linearGradient>
+    <linearGradient id="paint1_top" x1="15.338" y1="12.464" x2="18.0071" y2="4.56976" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#AB1830" stop-opacity="0"/><stop offset="1" stop-color="#AB1830"/>
+    </linearGradient>
+    <linearGradient id="paint2_top" x1="10.267" y1="12.61" x2="16.106" y2="21.7788" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#AB1830" stop-opacity="0"/><stop offset="1" stop-color="#AB1830"/>
+    </linearGradient>
+    <linearGradient id="paint3_top" x1="10.471" y1="20.466" x2="17.2353" y2="21.052" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#AB1830" stop-opacity="0"/><stop offset="0.24" stop-color="#AB1830"/><stop offset="0.78" stop-color="#AB1830"/><stop offset="1" stop-color="#AB1830" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="paint0_bot" x1="-0.00133827" y1="14.5547" x2="16.7103" y2="10.8284" gradientUnits="userSpaceOnUse">
+      <stop offset="0.65" stop-color="#AB1830" stop-opacity="0"/><stop offset="1" stop-color="#AB1830"/>
+    </linearGradient>
+    <linearGradient id="paint1_bot" x1="3.78639" y1="11.886" x2="3.27053" y2="19.1283" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#AB1830" stop-opacity="0"/><stop offset="1" stop-color="#AB1830"/>
+    </linearGradient>
+    <linearGradient id="paint2_bot" x1="6.58379" y1="10.1364" x2="1.56584" y2="5.93305" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#AB1830" stop-opacity="0"/><stop offset="1" stop-color="#AB1830"/>
+    </linearGradient>
+  </defs>
+</svg>

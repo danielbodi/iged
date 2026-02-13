@@ -1,0 +1,48 @@
+<div class="c-dashboard-card">
+  <p-card styleClass="c-dashboard-card__card">
+    <ng-template pTemplate="header">
+      <div class="c-dashboard-card__header">Indemnités</div>
+    </ng-template>
+    <div class="c-dashboard-card__table-wrapper">
+      <div class="c-dashboard-card__scroll-shadow" aria-hidden="true"></div>
+      <p-table
+        [value]="rows"
+        styleClass="c-dashboard-card__table p-datatable-sm p-datatable-gridlines"
+        [scrollable]="true"
+        scrollHeight="flex"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            @for (col of columns; track col.field) {
+              <th>{{ col.header }}</th>
+            }
+            <th class="c-dashboard-card__actions-header"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-row>
+          <tr
+            (mouseenter)="onRowMouseEnter(row.id)"
+            (mouseleave)="onRowMouseLeave()"
+          >
+            <td>{{ row.reference }}</td>
+            <td>{{ row.beneficiaire }}</td>
+            <td>{{ row.type }}</td>
+            <td>{{ row.statut }}</td>
+            <td>{{ row.montant }}</td>
+            <td>{{ row.dateCreation }}</td>
+            <td>{{ row.echeance }}</td>
+            <td class="c-dashboard-card__actions-cell">
+              @if (hoveredRowId() === row.id) {
+                <div class="c-dashboard-card__row-actions">
+                  <p-button icon="pi pi-eye" [rounded]="true" [text]="true" size="small" ariaLabel="View" />
+                  <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" size="small" ariaLabel="Edit" />
+                  <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" size="small" ariaLabel="Delete" />
+                </div>
+              }
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </p-card>
+</div>

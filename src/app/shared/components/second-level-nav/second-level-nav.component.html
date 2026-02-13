@@ -1,0 +1,88 @@
+<div class="c-second-level-nav" [class.c-second-level-nav--expanded]="expanded()">
+  <!-- Header: title + search icon, or PrimeNG search input -->
+  <div class="c-second-level-nav__header">
+    @if (searchActive()) {
+      <p-iconfield class="c-second-level-nav__search-field" iconPosition="left">
+        <input
+          pInputText
+          type="text"
+          class="c-second-level-nav__search-input"
+          placeholder="Rechercher..."
+          [ngModel]="searchQuery()"
+          (ngModelChange)="onSearchChange($event)"
+          (keydown.escape)="toggleSearch()"
+          autofocus
+        />
+        <p-inputicon class="pi pi-search"></p-inputicon>
+      </p-iconfield>
+      <button
+        type="button"
+        class="c-second-level-nav__search-close"
+        (click)="toggleSearch()"
+        aria-label="Fermer la recherche"
+      >
+        <i class="pi pi-times" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <span class="c-second-level-nav__title">{{ title() }}</span>
+      <button
+        type="button"
+        class="c-second-level-nav__search-toggle"
+        (click)="toggleSearch()"
+        aria-label="Rechercher"
+      >
+        <i class="pi pi-search" aria-hidden="true"></i>
+      </button>
+    }
+  </div>
+
+  <!-- Menu: sections with collapsible items -->
+  <nav class="c-second-level-nav__menu" aria-label="Second level navigation">
+    @for (section of filteredSections(); track section.id) {
+      <div class="c-second-level-nav__menu-section">
+        <!-- Section header -->
+        <button
+          type="button"
+          class="c-second-level-nav__section"
+          (click)="toggleSection(section)"
+          [attr.aria-expanded]="!section.collapsed"
+        >
+          <span class="c-second-level-nav__section-label">{{ section.label }}</span>
+          <i
+            class="c-second-level-nav__section-chevron pi"
+            [ngClass]="section.collapsed ? 'pi-chevron-down' : 'pi-chevron-up'"
+            aria-hidden="true"
+          ></i>
+        </button>
+
+        <!-- Section items -->
+        @if (!section.collapsed) {
+          @for (item of section.items; track item.id) {
+            <button
+              type="button"
+              class="c-second-level-nav__item"
+              [class.c-second-level-nav__item--active]="activeItemId() === item.id"
+              (click)="onItemClick(item.id)"
+            >
+              <span class="c-second-level-nav__item-label">{{ item.label }}</span>
+              @if (item.count !== undefined) {
+                <span
+                  class="c-second-level-nav__badge"
+                  [class.c-second-level-nav__badge--attention]="item.attention"
+                >
+                  {{ item.count }}
+                </span>
+              }
+            </button>
+          }
+        }
+      </div>
+    }
+  </nav>
+
+  <!-- Footer -->
+  <div class="c-second-level-nav__footer">
+    <span class="c-second-level-nav__version">Version 0.1.001</span>
+    <a href="#" class="c-second-level-nav__whats-new">Quoi de neuf ?</a>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<header class="c-top-bar">
+  <div class="c-top-bar__toggle">
+    <p-button
+      icon="pi pi-bars"
+      [rounded]="true"
+      [text]="true"
+      (onClick)="onToggleClick()"
+      ariaLabel="Toggle second level navigation"
+    />
+  </div>
+
+  <nav class="c-top-bar__breadcrumb">
+    <p-breadcrumb [model]="breadcrumbItems" [home]="breadcrumbHome" />
+  </nav>
+
+  <div class="c-top-bar__right">
+    <div class="c-top-bar__search">
+      <p-iconfield iconPosition="left">
+        <p-inputicon styleClass="pi pi-search" />
+        <input type="text" pInputText placeholder="Rechercher..." class="c-top-bar__search-input" />
+      </p-iconfield>
+    </div>
+
+    <div class="c-top-bar__actions">
+      <p-button icon="pi pi-bell" [rounded]="true" [text]="true" ariaLabel="Notifications" />
+      <p-button icon="pi pi-question-circle" [rounded]="true" [text]="true" ariaLabel="Help" />
+      <p-button icon="pi pi-cog" [rounded]="true" [text]="true" ariaLabel="Settings" />
+    </div>
+
+    <div class="c-top-bar__user-menu">
+      <p-button
+        icon="pi pi-user"
+        [rounded]="true"
+        [text]="true"
+        (onClick)="userMenu.toggle($event)"
+        ariaLabel="User menu"
+      />
+      <span class="c-top-bar__user-badge c-top-bar__user-badge--attention">3</span>
+      <p-menu #userMenu [model]="userMenuItems" [popup]="true" />
+    </div>
+  </div>
+</header>

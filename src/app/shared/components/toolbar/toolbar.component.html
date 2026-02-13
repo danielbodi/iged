@@ -1,0 +1,34 @@
+<p-toolbar styleClass="c-toolbar">
+  <ng-template #start>
+    <div class="c-toolbar__search">
+      <p-iconfield iconPosition="left">
+        <p-inputicon styleClass="pi pi-search" />
+        <input type="text" pInputText placeholder="Rechercher..." class="c-toolbar__search-input" />
+      </p-iconfield>
+    </div>
+    @if (expanded()) {
+      <div class="c-toolbar__filters">
+        <p-selectbutton
+          [options]="filterOptions"
+          [ngModel]="selectedFilter()"
+          (ngModelChange)="selectedFilter.set($event)"
+          optionLabel="label"
+          optionValue="value"
+        />
+      </div>
+    }
+  </ng-template>
+  <ng-template #end>
+    @if (expanded()) {
+      <p-button label="Ajouter" icon="pi pi-plus" size="small" />
+    }
+    <p-button
+      [icon]="expanded() ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
+      [rounded]="true"
+      [text]="true"
+      size="small"
+      (onClick)="toggleExpanded()"
+      [ariaLabel]="expanded() ? 'Réduire la barre' : 'Étendre la barre'"
+    />
+  </ng-template>
+</p-toolbar>

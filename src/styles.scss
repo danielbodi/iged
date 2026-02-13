@@ -1,0 +1,37 @@
+// ==========================================================================
+// ITCSS - Main entry point
+// ==========================================================================
+
+// ITCSS - Settings (variables must load before tokens)
+@use 'styles/01-settings/variables';
+
+// ITCSS - Tokens (uses variables)
+@use 'styles/01-settings/tokens';
+
+// ITCSS - Tools
+@use 'styles/02-tools/mixins';
+@use 'styles/02-tools/functions';
+
+// ITCSS - Generic
+@use 'styles/03-generic/reset';
+
+// ITCSS - Elements
+@use 'styles/04-elements/typography';
+
+// ITCSS - Objects
+@use 'styles/05-objects/layout';
+
+// ITCSS - Components (individual component files)
+@use 'styles/06-components/c-index';
+@use 'styles/06-components/c-first-level-nav';
+@use 'styles/06-components/c-second-level-nav';
+@use 'styles/06-components/c-top-bar';
+@use 'styles/06-components/c-toolbar';
+@use 'styles/06-components/c-dashboard-card';
+
+// ITCSS - Utilities
+@use 'styles/07-utilities/spacing';
+@use 'styles/07-utilities/visibility';
+
+// Tailwind CSS v4 - utilities only (no preflight that conflicts with PrimeNG)
+@import 'tailwindcss/utilities';

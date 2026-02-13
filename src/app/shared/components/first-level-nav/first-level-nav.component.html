@@ -1,0 +1,47 @@
+<nav
+  class="c-first-level-nav"
+  [class.c-first-level-nav--expanded]="hovered()"
+  (mouseenter)="onNavMouseEnter()"
+  (mouseleave)="onNavMouseLeave()"
+  aria-label="First level navigation"
+>
+  <!-- Logo: logomark only when collapsed, full logo when expanded -->
+  <div class="c-first-level-nav__logo">
+    @if (hovered()) {
+      <img
+        class="c-first-level-nav__logo-img"
+        src="assets/logos/solidarislogo.svg"
+        alt="Solidaris"
+        height="32"
+      />
+    } @else {
+      <img
+        class="c-first-level-nav__logo-img"
+        src="assets/logos/solidaris-logomark.svg"
+        alt="Solidaris"
+        height="32"
+      />
+    }
+  </div>
+
+  <!-- Menu items -->
+  <div class="c-first-level-nav__items">
+    @for (item of navItems; track item.id) {
+      <button
+        type="button"
+        class="c-first-level-nav__item"
+        [class.c-first-level-nav__item--active]="layout.activeFirstLevelId() === item.id"
+        (click)="onItemClick(item.id)"
+        [attr.aria-label]="item.label"
+      >
+        <i class="c-first-level-nav__icon bi" [ngClass]="item.icon" aria-hidden="true"></i>
+        @if (hovered()) {
+          <span class="c-first-level-nav__label">{{ item.label }}</span>
+        }
+      </button>
+    }
+  </div>
+
+  <!-- Avatar container (bottom) -->
+  <div class="c-first-level-nav__avatar"></div>
+</nav>

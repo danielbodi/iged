@@ -1,0 +1,40 @@
+@use '../01-settings/variables' as *;
+
+// ==========================================================================
+// Interactive element hover/press states
+// ==========================================================================
+@mixin interactive-states {
+  transition: background-color $transition-fast, color $transition-fast;
+
+  &:hover {
+    background-color: $color-bg-hover;
+  }
+
+  &:active {
+    background-color: $color-bg-pressed;
+  }
+}
+
+// ==========================================================================
+// Text truncation
+// ==========================================================================
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ==========================================================================
+// Focus ring
+// ==========================================================================
+@mixin focus-ring {
+  outline: 2px solid $color-border-focus;
+  outline-offset: 2px;
+}
+
+// ==========================================================================
+// Nav item states (alias for nav-specific interactive)
+// ==========================================================================
+@mixin nav-item-states {
+  @include interactive-states;
+}

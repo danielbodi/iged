@@ -1,0 +1,92 @@
+@use '../01-settings/variables' as *;
+
+// ==========================================================================
+// Dashboard Card + DataTable
+// Figma: card wrapper with table inside, scrollable both axes
+// Scroll shadows on edges, row hover actions absolute to card
+// ==========================================================================
+
+.c-dashboard-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+// Override PrimeNG card to fill space
+.c-dashboard-card__card.p-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  .p-card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    min-height: 0;
+  }
+
+  .p-card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: 0;
+  }
+}
+
+.c-dashboard-card__header {
+  padding: $spacing-16 $spacing-20;
+  font-weight: $font-weight-semibold;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  border-block-end: 1px solid $color-border;
+}
+
+// --------------------------------------------------------------------------
+// Table wrapper - scrollable both axes
+// --------------------------------------------------------------------------
+.c-dashboard-card__table-wrapper {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  position: relative;
+}
+
+// --------------------------------------------------------------------------
+// Scroll shadow - gradient on right edge to indicate more content
+// --------------------------------------------------------------------------
+.c-dashboard-card__scroll-shadow {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 2rem;
+  background: linear-gradient(to left, rgba($color-white, 0.95), transparent);
+  pointer-events: none;
+  z-index: 2;
+}
+
+// --------------------------------------------------------------------------
+// Row actions - visible on hover, sticky to the right
+// --------------------------------------------------------------------------
+.c-dashboard-card__actions-header {
+  width: 5rem;
+  text-align: end;
+}
+
+.c-dashboard-card__actions-cell {
+  position: sticky;
+  right: 0;
+  background: inherit;
+  text-align: end;
+  z-index: 1;
+}
+
+.c-dashboard-card__row-actions {
+  display: flex;
+  gap: $spacing-4;
+  justify-content: flex-end;
+  align-items: center;
+}

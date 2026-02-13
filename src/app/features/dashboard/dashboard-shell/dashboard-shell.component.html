@@ -1,0 +1,36 @@
+<div class="o-dashboard-layout">
+  <aside class="o-dashboard-layout__first-level">
+    <app-first-level-nav
+      (itemClick)="layout.expandSecondLevel($event)"
+    />
+  </aside>
+
+  <aside
+    class="o-dashboard-layout__second-level"
+    [class.o-dashboard-layout__second-level--expanded]="layout.secondLevelExpanded()"
+  >
+    <app-second-level-nav
+      [expanded]="layout.secondLevelExpanded()"
+      [activeSectionId]="layout.activeFirstLevelId()"
+      (itemClick)="layout.onSecondLevelItemClick()"
+      (close)="layout.collapseSecondLevel()"
+    />
+  </aside>
+
+  <main class="o-dashboard-layout__main">
+    <header class="o-dashboard-layout__top-bar">
+      <app-top-bar
+        [secondLevelExpanded]="layout.secondLevelExpanded()"
+        (toggleSecondLevel)="layout.toggleSecondLevel()"
+      />
+    </header>
+
+    <section class="o-dashboard-layout__toolbar">
+      <app-toolbar />
+    </section>
+
+    <section class="o-dashboard-layout__content">
+      <app-dashboard-card />
+    </section>
+  </main>
+</div>
