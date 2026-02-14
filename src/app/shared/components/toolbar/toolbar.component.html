@@ -25,6 +25,11 @@
             class="c-toolbar__search-input"
           />
         </p-iconfield>
+        @if (searchQuery()) {
+          <button type="button" class="c-toolbar__search-clear" (click)="searchQuery.set('')" aria-label="Effacer">
+            <i class="pi pi-times"></i>
+          </button>
+        }
       </div>
 
       <!-- Filter buttons (SelectButton) -->
@@ -68,6 +73,7 @@
             (completeMethod)="onAutocompleteSuggest($event, filter)"
             [multiple]="true"
             [dropdown]="true"
+            [showClear]="true"
             [inputId]="'filter-' + filter.id"
           />
         </div>

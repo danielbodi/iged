@@ -12,7 +12,39 @@
   flex-shrink: 0;
 }
 
+.c-expandable-search__field {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+}
+
 .c-expandable-search__input {
   width: 100%;
   min-width: 180px;
+  padding-right: $spacing-32 !important; // room for the clear button
+}
+
+// Clear button – overlaid on the right edge of the search input
+.c-expandable-search__clear {
+  position: absolute;
+  right: $spacing-8;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: $color-text-secondary;
+  cursor: pointer;
+  border-radius: $radius-full;
+
+  &:hover {
+    color: $color-text-primary;
+    background-color: $color-bg-hover;
+  }
 }

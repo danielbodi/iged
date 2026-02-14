@@ -38,19 +38,26 @@ import { ClickOutsideDirective } from '../../directives/click-outside.directive'
       (clickOutside)="collapse()"
     >
       @if (expanded()) {
-        <p-iconfield iconPosition="left">
-          <p-inputicon styleClass="pi pi-search" />
-          <input
-            #searchInput
-            type="text"
-            pInputText
-            [placeholder]="placeholder()"
-            [ngModel]="query()"
-            (ngModelChange)="onQueryChange($event)"
-            (keydown.escape)="collapse()"
-            class="c-expandable-search__input"
-          />
-        </p-iconfield>
+        <div class="c-expandable-search__field">
+          <p-iconfield iconPosition="left">
+            <p-inputicon styleClass="pi pi-search" />
+            <input
+              #searchInput
+              type="text"
+              pInputText
+              [placeholder]="placeholder()"
+              [ngModel]="query()"
+              (ngModelChange)="onQueryChange($event)"
+              (keydown.escape)="collapse()"
+              class="c-expandable-search__input"
+            />
+          </p-iconfield>
+          @if (query()) {
+            <button type="button" class="c-expandable-search__clear" (click)="onQueryChange('')" aria-label="Effacer">
+              <i class="pi pi-times"></i>
+            </button>
+          }
+        </div>
       } @else {
         <p-button
           icon="bi bi-search"
