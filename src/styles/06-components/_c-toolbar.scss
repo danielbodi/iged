@@ -1,32 +1,193 @@
 @use '../01-settings/variables' as *;
 
 // ==========================================================================
-// Toolbar
-// Figma: search + selectButton group + form items + buttons, collapsible
-// Custom variant wrapping PrimeNG p-toolbar
+// Toolbar – Filtres panel
+// Figma: 692:32736
+// Collapsed = single header row
+// Expanded  = header + body (autocompletes, toggles) + footer (actions)
 // ==========================================================================
 
+// --------------------------------------------------------------------------
+// Container
+// --------------------------------------------------------------------------
 .c-toolbar {
-  border-color: $color-border !important;
-  border-radius: 0 !important;
-  padding: $spacing-8 $spacing-16 !important;
-  background-color: $color-bg-surface !important;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-16;
+  background-color: $color-bg-surface;
+  border: 1px solid $color-border-strong;
+  border-radius: $radius-xl; // 12px
+  padding: $spacing-16; // Figma: py=16px, px=16px (both states share the same top/side padding)
+  box-shadow:
+    0 7px 7px 0 rgba(0, 0, 0, 0.04),
+    0 4.537px 4.1px 0 rgba(0, 0, 0, 0.03),
+    0 2.696px 2.23px 0 rgba(0, 0, 0, 0.02),
+    0 1.4px 1.138px 0 rgba(0, 0, 0, 0.02),
+    0 0.57px 0.57px 0 rgba(0, 0, 0, 0.02),
+    0 0.13px 0.275px 0 rgba(0, 0, 0, 0.01);
+  transition: box-shadow $transition-base, padding $transition-base;
 }
 
+.c-toolbar--expanded {
+  padding-bottom: 0; // expanded: footer handles its own bottom spacing
+  box-shadow:
+    0 9px 29px 0 rgba(0, 0, 0, 0.06),
+    0 5.833px 16.984px 0 rgba(0, 0, 0, 0.05),
+    0 3.467px 9.237px 0 rgba(0, 0, 0, 0.04),
+    0 1.8px 4.713px 0 rgba(0, 0, 0, 0.03),
+    0 0.733px 2.363px 0 rgba(0, 0, 0, 0.02),
+    0 0.167px 1.141px 0 rgba(0, 0, 0, 0.01);
+}
+
+// --------------------------------------------------------------------------
+// Header row
+// --------------------------------------------------------------------------
+.c-toolbar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: $spacing-20;
+}
+
+.c-toolbar__title-group {
+  display: flex;
+  align-items: center;
+  gap: $spacing-12;
+  flex-shrink: 0;
+}
+
+.c-toolbar__title {
+  font-family: $font-family-base;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-md; // 16px
+  line-height: 24px;
+  color: #262626;
+  margin: 0;
+}
+
+.c-toolbar__header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: $spacing-20;
+  flex: 1 0 0;
+  min-width: 0;
+}
+
+// --------------------------------------------------------------------------
+// Search input
+// --------------------------------------------------------------------------
 .c-toolbar__search {
-  min-width: 14rem;
+  flex-shrink: 0;
 }
 
 .c-toolbar__search-input {
   width: 100%;
 }
 
-.c-toolbar__filters {
-  margin-inline-start: $spacing-12;
+.c-toolbar:not(.c-toolbar--expanded) .c-toolbar__search {
+  width: 194px;
 }
 
-.c-toolbar__actions {
+.c-toolbar--expanded .c-toolbar__search {
+  width: 299px;
+}
+
+// --------------------------------------------------------------------------
+// Filter buttons (SelectButton)
+// --------------------------------------------------------------------------
+.c-toolbar__filter-buttons {
+  flex-shrink: 0;
+}
+
+// --------------------------------------------------------------------------
+// Toggle expand/collapse button
+// --------------------------------------------------------------------------
+.c-toolbar__toggle {
   display: flex;
   align-items: center;
-  gap: $spacing-8;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: $spacing-12;
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #262626;
+  border-radius: $radius-md;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background-color: $color-bg-hover;
+  }
+
+  i {
+    font-size: 16px;
+    line-height: 1;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Separators now use the reusable u-separator utility class
+// (see 07-utilities/_separator.scss)
+// --------------------------------------------------------------------------
+
+// --------------------------------------------------------------------------
+// Body – expanded content (2-row × 4-column grid)
+// Figma: autocomplete fields in row 1, toggle switches in row 2
+// --------------------------------------------------------------------------
+.c-toolbar__body {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-12;
+  width: 100%;
+}
+
+// Shared field cell (used by both autocompletes and toggles)
+.c-toolbar__field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+// Unified label style for all fields
+.c-toolbar__field-label {
+  font-family: $font-family-base;
+  font-weight: $font-weight-regular;
+  font-size: $font-size-md; // 16px
+  line-height: 21px;
+  color: #262626;
+}
+
+// Grid separator handled by u-separator--full-row utility
+
+// --------------------------------------------------------------------------
+// Footer – action buttons
+// --------------------------------------------------------------------------
+.c-toolbar__footer {
+  display: flex;
+  align-items: center;
+  gap: $spacing-12;
+  width: 100%;
+  padding-bottom: $spacing-16;
+}
+
+// --------------------------------------------------------------------------
+// PrimeNG component overrides inside toolbar
+// --------------------------------------------------------------------------
+.c-toolbar {
+  // Tag badge in title
+  .p-tag {
+    font-size: $font-size-base; // 14px
+    font-weight: $font-weight-semibold;
+    padding: 4px 8px;
+  }
+
+  // Autocomplete full width
+  .p-autocomplete {
+    width: 100%;
+  }
 }

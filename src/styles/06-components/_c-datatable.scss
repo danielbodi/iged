@@ -1,0 +1,97 @@
+@use '../01-settings/variables' as *;
+
+// ==========================================================================
+// p-datatable – flex chain for scroll-in-place layout inside dashboard card
+// ==========================================================================
+
+// p-table host element must participate in the flex chain
+.c-dashboard-card p-table {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+// --------------------------------------------------------------------------
+// Table root – flex container + scroll shadow host
+// timeline-scope hoists named scroll timelines from .p-datatable-table-container
+// so that pseudo-elements on .p-datatable (and .p-paginator) can reference them.
+// --------------------------------------------------------------------------
+.c-dashboard-card .p-datatable {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  timeline-scope: --table-scroll-x, --table-scroll-y;
+
+  // Right-edge scroll shadow
+  // Indicates more content to the right; fades out at max horizontal scroll
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 29px;
+    background: linear-gradient(to left, rgba(0, 0, 0, 0.08), transparent);
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0;
+    animation: scroll-shadow-fade 1s linear both;
+    animation-timeline: --table-scroll-x;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Scrollable wrapper – THIS is where scroll lives
+// Provides named scroll timelines on both axes
+// --------------------------------------------------------------------------
+.c-dashboard-card .p-datatable-table-container {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  scroll-timeline: --table-scroll-x inline, --table-scroll-y block;
+}
+
+// --------------------------------------------------------------------------
+// Scroll shadow keyframes
+// 0% → 97%: fully visible (there is more content to scroll)
+// 100%: hidden (reached the end of scroll range)
+// When no scroll range exists, animation is inactive → default opacity: 0
+// --------------------------------------------------------------------------
+@keyframes scroll-shadow-fade {
+  0% { opacity: 1; }
+  97% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+// --------------------------------------------------------------------------
+// Sticky header
+// --------------------------------------------------------------------------
+.c-dashboard-card .p-datatable-thead > tr > th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: $color-bg-surface;
+}
+
+// Cell padding from Figma: px=16px, pt=12px, pb=13px
+.c-dashboard-card .p-datatable-thead > tr > th,
+.c-dashboard-card .p-datatable-tbody > tr > td {
+  padding: 12px $spacing-16 13px;
+  white-space: nowrap;
+}
+
+// Body cell font
+.c-dashboard-card .p-datatable-tbody > tr > td {
+  font-size: $font-size-base; // 14px
+  color: #262626;
+}
+
+// Header cell font
+.c-dashboard-card .p-datatable-thead > tr > th {
+  font-size: $font-size-base; // 14px
+  font-weight: $font-weight-semibold;
+  color: #262626;
+}

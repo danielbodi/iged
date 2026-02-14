@@ -1,8 +1,7 @@
 <header class="c-top-bar">
   <div class="c-top-bar__toggle">
     <p-button
-      icon="pi pi-bars"
-      [rounded]="true"
+      icon="bi bi-layout-sidebar"
       [text]="true"
       (onClick)="onToggleClick()"
       ariaLabel="Toggle second level navigation"
@@ -10,32 +9,55 @@
   </div>
 
   <nav class="c-top-bar__breadcrumb">
-    <p-breadcrumb [model]="breadcrumbItems" [home]="breadcrumbHome" />
+    <p-breadcrumb [model]="breadcrumbItems" />
   </nav>
 
   <div class="c-top-bar__right">
-    <div class="c-top-bar__search">
-      <p-iconfield iconPosition="left">
-        <p-inputicon styleClass="pi pi-search" />
-        <input type="text" pInputText placeholder="Rechercher..." class="c-top-bar__search-input" />
-      </p-iconfield>
-    </div>
-
+    <!-- Action buttons group -->
     <div class="c-top-bar__actions">
-      <p-button icon="pi pi-bell" [rounded]="true" [text]="true" ariaLabel="Notifications" />
-      <p-button icon="pi pi-question-circle" [rounded]="true" [text]="true" ariaLabel="Help" />
-      <p-button icon="pi pi-cog" [rounded]="true" [text]="true" ariaLabel="Settings" />
+      <p-button icon="bi bi-plus-lg"        [text]="true" ariaLabel="Ajouter" />
+      <p-button icon="bi bi-list-ul"        [text]="true" ariaLabel="Liste" />
+      <p-button icon="bi bi-folder2"        [text]="true" ariaLabel="Dossiers" />
+      <p-button icon="bi bi-bar-chart-line" [text]="true" ariaLabel="Statistiques" />
+      <p-button icon="bi bi-cart3"          [text]="true" ariaLabel="Panier" />
+
+      <!-- Expandable search -->
+      <app-expandable-search
+        placeholder="Rechercher..."
+        ariaLabel="Rechercher"
+        (search)="onSearch($event)"
+      />
+
+      <p-button icon="bi bi-info-circle" [text]="true" ariaLabel="Informations" />
     </div>
 
+    <!-- Notifications with overlay badge -->
+    <p-overlay-badge [value]="notificationCount().toString()">
+      <p-button icon="bi bi-bell" [text]="true" ariaLabel="Notifications" />
+    </p-overlay-badge>
+
+    <!-- Messages with overlay badge -->
+    <p-overlay-badge [value]="messageCount().toString()">
+      <p-button icon="bi bi-envelope" [text]="true" ariaLabel="Messages" />
+    </p-overlay-badge>
+
+    <!-- User avatar + dropdown -->
     <div class="c-top-bar__user-menu">
-      <p-button
-        icon="pi pi-user"
-        [rounded]="true"
-        [text]="true"
-        (onClick)="userMenu.toggle($event)"
-        ariaLabel="User menu"
-      />
-      <span class="c-top-bar__user-badge c-top-bar__user-badge--attention">3</span>
+      <button
+        type="button"
+        class="c-top-bar__avatar-btn"
+        (click)="userMenu.toggle($event)"
+        aria-label="User menu"
+      >
+        <img
+          class="c-top-bar__avatar-img"
+          src="assets/logos/Avatar.svg"
+          alt="User avatar"
+          width="32"
+          height="32"
+        />
+        <i class="pi pi-angle-down c-top-bar__avatar-chevron"></i>
+      </button>
       <p-menu #userMenu [model]="userMenuItems" [popup]="true" />
     </div>
   </div>

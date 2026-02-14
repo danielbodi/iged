@@ -63,6 +63,9 @@ $color-border: rgba(0, 0, 0, 0.1);            // transparant.black.100
 $color-border-strong: rgba(0, 0, 0, 0.2);     // transparant.black.200
 $color-border-focus: $color-blue-300;          // focus.color = blue.300
 
+// Separator (Figma: transparent/black/50 – 5%)
+$color-separator: rgba(0, 0, 0, 0.05);        // transparant.black.50
+
 // Brand / accent (from Plectrum rose palette)
 $color-active: $color-rose-500;                // #da002f - Solidaris red
 $color-attention: $color-rose-500;             // Same brand red

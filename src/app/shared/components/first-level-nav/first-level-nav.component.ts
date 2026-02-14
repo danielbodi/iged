@@ -39,7 +39,9 @@ export class FirstLevelNavComponent {
 
   constructor(protected layout: DashboardLayoutService) {}
 
+  /** Only 'indemnites' is an active route for now */
   onItemClick(itemId: string): void {
+    if (itemId !== 'indemnites') return;
     this.itemClick.emit(itemId);
   }
 

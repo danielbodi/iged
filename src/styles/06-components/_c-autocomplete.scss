@@ -1,0 +1,20 @@
+// ==========================================================================
+// p-autocomplete – chip remove icon vertical alignment fix
+// ==========================================================================
+
+.p-autocomplete-chip.p-chip {
+  display: inline-flex;
+  align-items: center;
+}
+
+.p-chip-remove-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.p-autocomplete-chip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

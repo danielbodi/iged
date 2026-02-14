@@ -1,50 +1,111 @@
-import { Component, signal } from '@angular/core';
-import { CardModule } from 'primeng/card';
+import { Component, signal, computed } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
+import { BadgeModule } from 'primeng/badge';
+import { PaginatorModule } from 'primeng/paginator';
+import { MenuModule } from 'primeng/menu';
+import { MenuItem } from 'primeng/api';
 
-interface TableRow {
-  id: string;
-  reference: string;
-  beneficiaire: string;
+export interface DocumentRow {
+  id: number;
+  oa: number;
+  ter: number;
+  source: string;
+  identification: string;
+  nom: string;
   type: string;
-  statut: string;
-  montant: string;
-  dateCreation: string;
-  echeance: string;
+  dateReception: string;
 }
 
 @Component({
   selector: 'app-dashboard-card',
   standalone: true,
-  imports: [CardModule, TableModule, ButtonModule],
+  imports: [TableModule, ButtonModule, BadgeModule, PaginatorModule, MenuModule],
   templateUrl: './dashboard-card.component.html'
 })
 export class DashboardCardComponent {
-  hoveredRowId = signal<string | null>(null);
+  hoveredRowId = signal<number | null>(null);
 
-  columns = [
-    { field: 'reference', header: 'Référence' },
-    { field: 'beneficiaire', header: 'Bénéficiaire' },
+  /** Three-dots menu items */
+  cardMenuItems: MenuItem[] = [
+    { label: 'Exporter', icon: 'bi bi-download' },
+    { label: 'Imprimer', icon: 'bi bi-printer' },
+    { separator: true },
+    { label: 'Paramètres', icon: 'bi bi-gear' }
+  ];
+
+  /** Pagination state */
+  first = signal(0);
+  rowsPerPage = signal(10);
+
+  /** Total number of results */
+  totalRecords = computed(() => this.allRows.length);
+
+  /** Badge label */
+  totalLabel = computed(() => `${this.totalRecords()} résultats`);
+
+  /** Column definitions */
+  columns: { field: keyof DocumentRow; header: string }[] = [
+    { field: 'oa', header: 'O.A' },
+    { field: 'ter', header: 'Ter.' },
+    { field: 'source', header: 'Source' },
+    { field: 'identification', header: 'Identification' },
+    { field: 'nom', header: 'Nom' },
     { field: 'type', header: 'Type' },
-    { field: 'statut', header: 'Statut' },
-    { field: 'montant', header: 'Montant' },
-    { field: 'dateCreation', header: 'Date création' },
-    { field: 'echeance', header: 'Échéance' }
+    { field: 'dateReception', header: 'Date de réception' }
   ];
 
-  rows: TableRow[] = [
-    { id: '1', reference: 'IND-2024-001', beneficiaire: 'Dupont Jean', type: 'Maladie', statut: 'En cours', montant: '1.250,00 €', dateCreation: '15/01/2024', echeance: '15/02/2024' },
-    { id: '2', reference: 'IND-2024-002', beneficiaire: 'Martin Sophie', type: 'Accident', statut: 'En attente', montant: '3.780,50 €', dateCreation: '16/01/2024', echeance: '16/02/2024' },
-    { id: '3', reference: 'IND-2024-003', beneficiaire: 'Leroy Michel', type: 'Invalidité', statut: 'Terminé', montant: '892,00 €', dateCreation: '17/01/2024', echeance: '17/02/2024' },
-    { id: '4', reference: 'IND-2024-004', beneficiaire: 'Bernard Claire', type: 'Maladie', statut: 'En cours', montant: '2.100,00 €', dateCreation: '18/01/2024', echeance: '18/02/2024' },
-    { id: '5', reference: 'IND-2024-005', beneficiaire: 'Petit François', type: 'Maternité', statut: 'En attente', montant: '4.500,00 €', dateCreation: '19/01/2024', echeance: '19/02/2024' },
-    { id: '6', reference: 'IND-2024-006', beneficiaire: 'Moreau Anne', type: 'Maladie', statut: 'Archivé', montant: '670,25 €', dateCreation: '20/01/2024', echeance: '20/02/2024' },
-    { id: '7', reference: 'IND-2024-007', beneficiaire: 'Durand Pierre', type: 'Accident', statut: 'En cours', montant: '1.890,00 €', dateCreation: '21/01/2024', echeance: '21/02/2024' },
-    { id: '8', reference: 'IND-2024-008', beneficiaire: 'Simon Marie', type: 'Invalidité', statut: 'Brouillon', montant: '5.230,75 €', dateCreation: '22/01/2024', echeance: '22/02/2024' }
+  /** Mock data matching the Figma design */
+  allRows: DocumentRow[] = [
+    { id: 1,  oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830724-2', nom: 'Alice, Johnson',     type: 'DC - demande de paiement IND (INDPMTDC)',  dateReception: '2023-07-24 14:32' },
+    { id: 2,  oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830725-3', nom: 'Eva, Martinez',      type: 'DC - demande de paiement IND (INDPMTDC)',  dateReception: '2023-07-24 14:32' },
+    { id: 3,  oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830726-4', nom: 'David, Garcia',      type: 'AT - demande de paiement IND (INDPMTAT)',  dateReception: '2023-07-24 14:32' },
+    { id: 4,  oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830727-5', nom: 'Henry, Taylor',      type: 'AT - demande de paiement IND (INDPMTAT)',  dateReception: '2023-07-24 14:32' },
+    { id: 5,  oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830728-6', nom: 'Grace, Anderson',    type: 'DC - demande de paiement IND (INDPMTDC)',  dateReception: '2023-07-24 14:32' },
+    { id: 6,  oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830729-7', nom: 'Isabella, Thomas',   type: 'DC - demande de paiement IND (INDPMTDC)',  dateReception: '2023-07-24 14:32' },
+    { id: 7,  oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830730-8', nom: 'Catherine, Davis',   type: 'AT - demande de paiement IND (INDPMTAT)',  dateReception: '2023-07-24 14:32' },
+    { id: 8,  oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830731-9', nom: 'Frank, Wilson',      type: 'AT - demande de paiement IND (INDPMTAT)',  dateReception: '2023-07-24 14:32' },
+    { id: 9,  oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830732-0', nom: 'Brian, Smith',       type: 'DC - demande de paiement IND (INDPMTDC)',  dateReception: '2023-07-24 14:32' },
+    { id: 10, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830733-0', nom: 'Brian, Smith',       type: 'DC - demande de paiement IND (INDPMTDC)',  dateReception: '2023-07-24 14:32' },
+    // Extra rows to demonstrate pagination
+    { id: 11, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830734-1', nom: 'Laura, Brown',       type: 'AT - demande de paiement IND (INDPMTAT)',  dateReception: '2023-07-25 09:15' },
+    { id: 12, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830735-2', nom: 'Peter, Williams',    type: 'DC - demande de paiement IND (INDPMTDC)',  dateReception: '2023-07-25 09:15' },
+    { id: 13, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830736-3', nom: 'Sophie, Jones',      type: 'AT - demande de paiement IND (INDPMTAT)',  dateReception: '2023-07-25 10:20' },
+    { id: 14, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830737-4', nom: 'Marc, Miller',       type: 'DC - demande de paiement IND (INDPMTDC)',  dateReception: '2023-07-25 10:20' },
+    { id: 15, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830738-5', nom: 'Julie, Davis',       type: 'AT - demande de paiement IND (INDPMTAT)',  dateReception: '2023-07-25 11:45' },
+    { id: 16, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830739-6', nom: 'Thomas, Moore',      type: 'DC - demande de paiement IND (INDPMTDC)',  dateReception: '2023-07-25 11:45' },
+    { id: 17, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830740-7', nom: 'Anne, Taylor',       type: 'AT - demande de paiement IND (INDPMTAT)',  dateReception: '2023-07-26 08:00' },
+    { id: 18, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830741-8', nom: 'Robert, Anderson',   type: 'DC - demande de paiement IND (INDPMTDC)',  dateReception: '2023-07-26 08:00' },
+    { id: 19, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830742-9', nom: 'Claire, Thomas',     type: 'AT - demande de paiement IND (INDPMTAT)',  dateReception: '2023-07-26 09:30' },
+    { id: 20, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830743-0', nom: 'Jean, Jackson',      type: 'DC - demande de paiement IND (INDPMTDC)',  dateReception: '2023-07-26 09:30' },
+    { id: 21, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830744-1', nom: 'Marie, White',       type: 'AT - demande de paiement IND (INDPMTAT)',  dateReception: '2023-07-26 14:00' },
+    { id: 22, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830745-2', nom: 'Paul, Harris',       type: 'DC - demande de paiement IND (INDPMTDC)',  dateReception: '2023-07-26 14:00' },
+    { id: 23, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830746-3', nom: 'Emma, Martin',       type: 'AT - demande de paiement IND (INDPMTAT)',  dateReception: '2023-07-27 08:45' },
+    { id: 24, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830747-4', nom: 'Lucas, Garcia',      type: 'DC - demande de paiement IND (INDPMTDC)',  dateReception: '2023-07-27 08:45' },
+    { id: 25, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830748-5', nom: 'Sarah, Robinson',    type: 'AT - demande de paiement IND (INDPMTAT)',  dateReception: '2023-07-27 10:10' },
+    { id: 26, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830749-6', nom: 'Nicolas, Clark',     type: 'DC - demande de paiement IND (INDPMTDC)',  dateReception: '2023-07-27 10:10' },
+    { id: 27, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830750-7', nom: 'Isabelle, Lewis',    type: 'AT - demande de paiement IND (INDPMTAT)',  dateReception: '2023-07-27 11:30' },
+    { id: 28, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830751-8', nom: 'Antoine, Walker',    type: 'DC - demande de paiement IND (INDPMTDC)',  dateReception: '2023-07-27 11:30' },
+    { id: 29, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830752-9', nom: 'Charlotte, Hall',    type: 'AT - demande de paiement IND (INDPMTAT)',  dateReception: '2023-07-28 08:00' },
+    { id: 30, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830753-0', nom: 'Vincent, Allen',     type: 'DC - demande de paiement IND (INDPMTDC)',  dateReception: '2023-07-28 08:00' },
+    { id: 31, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830754-1', nom: 'Camille, Young',     type: 'AT - demande de paiement IND (INDPMTAT)',  dateReception: '2023-07-28 09:15' },
+    { id: 32, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830755-2', nom: 'Hugo, King',         type: 'DC - demande de paiement IND (INDPMTDC)',  dateReception: '2023-07-28 09:15' },
+    { id: 33, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830756-3', nom: 'Léa, Wright',        type: 'AT - demande de paiement IND (INDPMTAT)',  dateReception: '2023-07-28 10:30' },
+    { id: 34, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830757-4', nom: 'Gabriel, Lopez',     type: 'DC - demande de paiement IND (INDPMTDC)',  dateReception: '2023-07-28 10:30' },
+    { id: 35, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830758-5', nom: 'Manon, Hill',        type: 'AT - demande de paiement IND (INDPMTAT)',  dateReception: '2023-07-28 14:00' },
+    { id: 36, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830759-6', nom: 'Raphaël, Scott',     type: 'DC - demande de paiement IND (INDPMTDC)',  dateReception: '2023-07-28 14:00' },
+    { id: 37, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830760-7', nom: 'Inès, Green',        type: 'AT - demande de paiement IND (INDPMTAT)',  dateReception: '2023-07-29 08:00' },
+    { id: 38, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830761-8', nom: 'Maxime, Adams',      type: 'DC - demande de paiement IND (INDPMTDC)',  dateReception: '2023-07-29 08:00' },
+    { id: 39, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830762-9', nom: 'Zoé, Baker',         type: 'AT - demande de paiement IND (INDPMTAT)',  dateReception: '2023-07-29 09:00' },
+    { id: 40, oa: 319, ter: 315, source: 'ATDCCTX', identification: '4673343-19830763-0', nom: 'Arthur, Gonzalez',   type: 'DC - demande de paiement IND (INDPMTDC)',  dateReception: '2023-07-29 09:00' }
   ];
 
-  onRowMouseEnter(id: string): void {
+  onPageChange(event: { first: number; rows: number }): void {
+    this.first.set(event.first);
+    this.rowsPerPage.set(event.rows);
+  }
+
+  onRowMouseEnter(id: number): void {
     this.hoveredRowId.set(id);
   }
 

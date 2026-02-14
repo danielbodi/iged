@@ -442,28 +442,28 @@ import type { ButtonDesignTokens } from '@primeuix/themes/types/button';
             },
             outlined: {
                 help: {
-                    color: "{surface.50}",
-                    borderColor: "{surface.50}",
-                    hoverBackground: "{surface.50}",
-                    activeBackground: "{surface.50}"
+                    color: "{purple.600}",
+                    borderColor: "{purple.200}",
+                    hoverBackground: "{purple.50}",
+                    activeBackground: "{purple.100}"
                 },
                 info: {
-                    color: "{surface.50}",
-                    borderColor: "{surface.50}",
-                    hoverBackground: "{surface.50}",
-                    activeBackground: "{surface.50}"
+                    color: "{blue.600}",
+                    borderColor: "{blue.200}",
+                    hoverBackground: "{blue.75}",
+                    activeBackground: "{blue.100}"
                 },
                 warn: {
-                    color: "{surface.50}",
-                    borderColor: "{surface.50}",
-                    hoverBackground: "{surface.50}",
-                    activeBackground: "{surface.50}"
+                    color: "{orange.600}",
+                    borderColor: "{orange.200}",
+                    hoverBackground: "{orange.75}",
+                    activeBackground: "{orange.100}"
                 },
                 plain: {
-                    color: "{surface.50}",
-                    borderColor: "{surface.50}",
-                    hoverBackground: "{surface.50}",
-                    activeBackground: "{surface.50}"
+                    color: "{surface.900}",
+                    borderColor: "{transparant.black.200}",
+                    hoverBackground: "{transparant.black.50}",
+                    activeBackground: "{transparant.black.100}"
                 },
                 danger: {
                     color: "{red.600}",
@@ -472,28 +472,28 @@ import type { ButtonDesignTokens } from '@primeuix/themes/types/button';
                     activeBackground: "{red.100}"
                 },
                 primary: {
-                    color: "{surface.50}",
-                    borderColor: "{surface.50}",
-                    hoverBackground: "{surface.50}",
-                    activeBackground: "{surface.50}"
+                    color: "{primary.500}",
+                    borderColor: "{primary.200}",
+                    hoverBackground: "{primary.75}",
+                    activeBackground: "{primary.100}"
                 },
                 success: {
-                    color: "{surface.50}",
-                    borderColor: "{surface.50}",
-                    hoverBackground: "{surface.50}",
-                    activeBackground: "{surface.50}"
+                    color: "{green.600}",
+                    borderColor: "{green.200}",
+                    hoverBackground: "{green.75}",
+                    activeBackground: "{green.100}"
                 },
                 contrast: {
-                    color: "{surface.50}",
-                    borderColor: "{surface.50}",
-                    hoverBackground: "{surface.50}",
-                    activeBackground: "{surface.50}"
+                    color: "{surface.950}",
+                    borderColor: "{surface.300}",
+                    hoverBackground: "{surface.75}",
+                    activeBackground: "{surface.100}"
                 },
                 secondary: {
-                    color: "{surface.50}",
-                    borderColor: "{surface.50}",
-                    hoverBackground: "{surface.50}",
-                    activeBackground: "{surface.50}"
+                    color: "{surface.900}",
+                    borderColor: "{transparant.black.200}",
+                    hoverBackground: "{transparant.black.50}",
+                    activeBackground: "{transparant.black.100}"
                 }
             }
         }

@@ -1,0 +1,31 @@
+@use '../01-settings/variables' as *;
+
+// ==========================================================================
+// p-paginator – bottom of dashboard card
+// ==========================================================================
+
+.c-dashboard-card .p-paginator {
+  flex-shrink: 0;
+  border-top: 1px solid $color-border;
+  padding: $spacing-8 $spacing-16;
+  position: relative;
+
+  // Bottom-edge scroll shadow
+  // Extends 48px above the paginator to overlay the bottom of the scroll area.
+  // Indicates more content below; fades out at max vertical scroll.
+  // Uses --table-scroll-y timeline hoisted via timeline-scope on .p-datatable.
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 100%; // anchored right above the paginator
+    left: 0;
+    right: 0;
+    height: 48px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.06), transparent);
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0;
+    animation: scroll-shadow-fade 1s linear both;
+    animation-timeline: --table-scroll-y;
+  }
+}

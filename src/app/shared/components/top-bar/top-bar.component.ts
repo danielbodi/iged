@@ -1,11 +1,10 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, signal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
-import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon';
-import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { MenuItem } from 'primeng/api';
+import { ExpandableSearchComponent } from '../expandable-search/expandable-search.component';
 
 @Component({
   selector: 'app-top-bar',
@@ -13,10 +12,9 @@ import { MenuItem } from 'primeng/api';
   imports: [
     ButtonModule,
     BreadcrumbModule,
-    IconFieldModule,
-    InputIconModule,
-    InputTextModule,
-    MenuModule
+    MenuModule,
+    OverlayBadgeModule,
+    ExpandableSearchComponent
   ],
   templateUrl: './top-bar.component.html'
 })
@@ -24,21 +22,31 @@ export class TopBarComponent {
   secondLevelExpanded = input(false);
   toggleSecondLevel = output<void>();
 
-  breadcrumbHome: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
-
   breadcrumbItems: MenuItem[] = [
     { label: 'Indemnités' },
-    { label: 'Recent' }
+    { label: 'AT & DC - Demande de paiement (IND)' }
   ];
 
   userMenuItems: MenuItem[] = [
-    { label: 'Mon profil', icon: 'pi pi-user' },
-    { label: 'Paramètres', icon: 'pi pi-cog' },
+    { label: 'Mon profil', icon: 'bi bi-person' },
+    { label: 'Paramètres', icon: 'bi bi-gear' },
     { separator: true },
-    { label: 'Déconnexion', icon: 'pi pi-sign-out' }
+    { label: 'Déconnexion', icon: 'bi bi-box-arrow-right' }
   ];
+
+  /** Notification count for bell */
+  notificationCount = signal(8);
+
+  /** Message count for envelope */
+  messageCount = signal(8);
+
+  searchQuery = signal('');
 
   onToggleClick(): void {
     this.toggleSecondLevel.emit();
+  }
+
+  onSearch(query: string): void {
+    this.searchQuery.set(query);
   }
 }

@@ -1,39 +1,17 @@
 <div class="c-second-level-nav" [class.c-second-level-nav--expanded]="expanded()">
-  <!-- Header: title + search icon, or PrimeNG search input -->
+  <!-- Header: title + expandable search -->
   <div class="c-second-level-nav__header">
-    @if (searchActive()) {
-      <p-iconfield class="c-second-level-nav__search-field" iconPosition="left">
-        <input
-          pInputText
-          type="text"
-          class="c-second-level-nav__search-input"
-          placeholder="Rechercher..."
-          [ngModel]="searchQuery()"
-          (ngModelChange)="onSearchChange($event)"
-          (keydown.escape)="toggleSearch()"
-          autofocus
-        />
-        <p-inputicon class="pi pi-search"></p-inputicon>
-      </p-iconfield>
-      <button
-        type="button"
-        class="c-second-level-nav__search-close"
-        (click)="toggleSearch()"
-        aria-label="Fermer la recherche"
-      >
-        <i class="pi pi-times" aria-hidden="true"></i>
-      </button>
-    } @else {
+    @if (!searchExpanded()) {
       <span class="c-second-level-nav__title">{{ title() }}</span>
-      <button
-        type="button"
-        class="c-second-level-nav__search-toggle"
-        (click)="toggleSearch()"
-        aria-label="Rechercher"
-      >
-        <i class="pi pi-search" aria-hidden="true"></i>
-      </button>
     }
+    <app-expandable-search
+      class="c-second-level-nav__search"
+      [class.c-second-level-nav__search--expanded]="searchExpanded()"
+      placeholder="Rechercher..."
+      ariaLabel="Rechercher dans le menu"
+      (expandedChange)="onSearchExpandedChange($event)"
+      (search)="onSearchChange($event)"
+    />
   </div>
 
   <!-- Menu: sections with collapsible items -->

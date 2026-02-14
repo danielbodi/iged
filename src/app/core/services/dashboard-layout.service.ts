@@ -17,8 +17,8 @@ export interface SecondLevelNavItem {
 
 @Injectable({ providedIn: 'root' })
 export class DashboardLayoutService {
-  private _secondLevelExpanded = signal(false);
-  private _activeFirstLevelId = signal<string | null>(null);
+  private _secondLevelExpanded = signal(true);
+  private _activeFirstLevelId = signal<string | null>('indemnites');
   private _firstLevelHoveredId = signal<string | null>(null);
 
   readonly secondLevelExpanded = this._secondLevelExpanded.asReadonly();

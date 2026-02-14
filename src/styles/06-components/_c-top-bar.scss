@@ -12,7 +12,7 @@
   padding: $spacing-12 $spacing-16;
   background-color: $color-bg-surface;
   border-block-end: 1px solid $color-border;
-  min-height: 3.5rem;
+  height: 57px;
 }
 
 .c-top-bar__toggle {
@@ -31,50 +31,35 @@
   flex-shrink: 0;
 }
 
-.c-top-bar__search {
-  min-width: 12rem;
-}
-
-.c-top-bar__search-input {
-  width: 100%;
-}
-
 .c-top-bar__actions {
   display: flex;
   align-items: center;
-  gap: $spacing-4;
 }
 
 // --------------------------------------------------------------------------
-// User menu + custom badge
-// Figma: badge sits absolute top-right of user button
-// Default: grey number, Attention: red number
+// User menu: avatar + chevron dropdown
 // --------------------------------------------------------------------------
 .c-top-bar__user-menu {
   position: relative;
 }
 
-.c-top-bar__user-badge {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  min-width: 1.125rem;
-  height: 1.125rem;
-  padding: 0 $spacing-4;
+.c-top-bar__avatar-btn {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: $font-size-xs;
-  font-weight: $font-weight-bold;
-  background-color: $color-bg-surface;
-  border: 1px solid $color-border;
-  border-radius: $radius-full;
-  color: $color-text-secondary;
-  line-height: 1;
-  pointer-events: none;
+  gap: $spacing-8;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: $radius-md;
+  cursor: pointer;
+}
 
-  &--attention {
-    color: $color-attention;
-    border-color: $color-attention;
-  }
+.c-top-bar__avatar-img {
+  display: block;
+  border-radius: $radius-md;
+}
+
+.c-top-bar__avatar-chevron {
+  font-size: 16px;
+  color: $color-text-secondary;
 }

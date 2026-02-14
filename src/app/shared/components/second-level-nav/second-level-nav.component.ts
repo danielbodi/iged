@@ -1,9 +1,7 @@
 import { Component, input, output, signal, computed } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon';
-import { InputTextModule } from 'primeng/inputtext';
+import { ExpandableSearchComponent } from '../expandable-search/expandable-search.component';
 
 export interface SecondLevelSection {
   id: string;
@@ -22,7 +20,7 @@ export interface SecondLevelMenuItem {
 @Component({
   selector: 'app-second-level-nav',
   standalone: true,
-  imports: [NgClass, FormsModule, IconFieldModule, InputIconModule, InputTextModule],
+  imports: [NgClass, FormsModule, ExpandableSearchComponent],
   templateUrl: './second-level-nav.component.html'
 })
 export class SecondLevelNavComponent {
@@ -31,12 +29,12 @@ export class SecondLevelNavComponent {
   itemClick = output<void>();
   close = output<void>();
 
-  /** Whether the search input is visible (replaces the title) */
-  searchActive = signal(false);
+  /** Whether the search input is expanded (replaces the title) */
+  searchExpanded = signal(false);
   searchQuery = signal('');
 
-  /** Active menu item */
-  activeItemId = signal<string | null>(null);
+  /** Active menu item – default to AT & DC - Demande de paiement (IND) */
+  activeItemId = signal<string | null>('at-dc-demande');
 
   /** Menu structure: sections with grouped items (from Figma 692-24851) */
   sections: SecondLevelSection[] = [
@@ -119,23 +117,21 @@ export class SecondLevelNavComponent {
       .filter(section => section.items.length > 0);
   });
 
-  toggleSearch(): void {
-    const wasActive = this.searchActive();
-    this.searchActive.set(!wasActive);
-    if (wasActive) {
-      this.searchQuery.set('');
-    }
+  onSearchExpandedChange(expanded: boolean): void {
+    this.searchExpanded.set(expanded);
   }
 
-  onSearchChange(value: string): void {
-    this.searchQuery.set(value);
+  onSearchChange(query: string): void {
+    this.searchQuery.set(query);
   }
 
   toggleSection(section: SecondLevelSection): void {
     section.collapsed = !section.collapsed;
   }
 
+  /** Only 'at-dc-demande' is an active route for now */
   onItemClick(itemId: string): void {
+    if (itemId !== 'at-dc-demande') return;
     this.activeItemId.set(itemId);
     this.itemClick.emit();
   }

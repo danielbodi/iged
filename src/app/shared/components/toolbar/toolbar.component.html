@@ -1,13 +1,34 @@
-<p-toolbar styleClass="c-toolbar">
-  <ng-template #start>
-    <div class="c-toolbar__search">
-      <p-iconfield iconPosition="left">
-        <p-inputicon styleClass="pi pi-search" />
-        <input type="text" pInputText placeholder="Rechercher..." class="c-toolbar__search-input" />
-      </p-iconfield>
+<div
+  class="c-toolbar"
+  [class.c-toolbar--expanded]="expanded()"
+>
+  <!-- ====== Header row ====== -->
+  <div class="c-toolbar__header">
+    <div class="c-toolbar__title-group">
+      <h3 class="c-toolbar__title">Filtres</h3>
+      @if (expanded()) {
+        <p-tag [value]="'' + activeFilterCount()" [rounded]="true" severity="secondary" />
+      }
     </div>
-    @if (expanded()) {
-      <div class="c-toolbar__filters">
+
+    <div class="c-toolbar__header-actions">
+      <!-- Search input -->
+      <div class="c-toolbar__search">
+        <p-iconfield iconPosition="left">
+          <p-inputicon styleClass="pi pi-search" />
+          <input
+            type="text"
+            pInputText
+            [placeholder]="searchPlaceholder()"
+            [ngModel]="searchQuery()"
+            (ngModelChange)="searchQuery.set($event)"
+            class="c-toolbar__search-input"
+          />
+        </p-iconfield>
+      </div>
+
+      <!-- Filter buttons (SelectButton) -->
+      <div class="c-toolbar__filter-buttons">
         <p-selectbutton
           [options]="filterOptions"
           [ngModel]="selectedFilter()"
@@ -16,19 +37,89 @@
           optionValue="value"
         />
       </div>
-    }
-  </ng-template>
-  <ng-template #end>
-    @if (expanded()) {
-      <p-button label="Ajouter" icon="pi pi-plus" size="small" />
-    }
-    <p-button
-      [icon]="expanded() ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
-      [rounded]="true"
-      [text]="true"
-      size="small"
-      (onClick)="toggleExpanded()"
-      [ariaLabel]="expanded() ? 'Réduire la barre' : 'Étendre la barre'"
-    />
-  </ng-template>
-</p-toolbar>
+
+      <!-- Toggle expand/collapse -->
+      <button
+        type="button"
+        class="c-toolbar__toggle"
+        (click)="toggleExpanded()"
+        [attr.aria-label]="expanded() ? 'Réduire les filtres' : 'Étendre les filtres'"
+        [attr.aria-expanded]="expanded()"
+      >
+        <i class="pi" [class.pi-angle-up]="expanded()" [class.pi-angle-down]="!expanded()"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ====== Expanded body ====== -->
+  @if (expanded()) {
+    <hr class="u-separator" />
+
+    <div class="c-toolbar__body">
+      <!-- Row 1: Autocomplete filter fields -->
+      @for (filter of autocompleteFilters; track filter.id) {
+        <div class="c-toolbar__field">
+          <label class="c-toolbar__field-label" [attr.for]="'filter-' + filter.id">
+            {{ filter.label }}
+          </label>
+          <p-autocomplete
+            [(ngModel)]="filter.selectedValues"
+            [suggestions]="filteredSuggestions"
+            (completeMethod)="onAutocompleteSuggest($event, filter)"
+            [multiple]="true"
+            [dropdown]="true"
+            [inputId]="'filter-' + filter.id"
+          />
+        </div>
+      }
+      <!-- Empty 4th cell in row 1 -->
+      <div class="c-toolbar__field c-toolbar__field--empty"></div>
+
+      <!-- Separator spanning all 4 columns -->
+      <hr class="u-separator u-separator--full-row" />
+
+      <!-- Row 2: Toggle-switch filters -->
+      @for (toggle of toggleFilters; track toggle.id) {
+        <div class="c-toolbar__field">
+          <label class="c-toolbar__field-label" [attr.for]="'toggle-' + toggle.id">
+            {{ toggle.label }}
+          </label>
+          <p-toggleswitch
+            [(ngModel)]="toggle.value"
+            [inputId]="'toggle-' + toggle.id"
+          />
+        </div>
+      }
+    </div>
+
+    <!-- ====== Footer ====== -->
+    <hr class="u-separator" />
+
+    <div class="c-toolbar__footer">
+      <p-button
+        label="Appliquer"
+        icon="bi bi-check-lg"
+        (onClick)="onApply()"
+      />
+      <p-button
+        label="Sauvegarder et appliquer"
+        icon="bi bi-floppy"
+        (onClick)="onSaveAndApply()"
+      />
+      <p-button
+        label="Supprimer"
+        icon="bi bi-trash3"
+        severity="secondary"
+        [outlined]="true"
+        (onClick)="onDelete()"
+      />
+      <p-button
+        label="Annuler"
+        icon="bi bi-x-lg"
+        severity="secondary"
+        [outlined]="true"
+        (onClick)="onCancel()"
+      />
+    </div>
+  }
+</div>

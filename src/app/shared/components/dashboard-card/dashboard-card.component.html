@@ -1,48 +1,107 @@
 <div class="c-dashboard-card">
-  <p-card styleClass="c-dashboard-card__card">
-    <ng-template pTemplate="header">
-      <div class="c-dashboard-card__header">Indemnités</div>
-    </ng-template>
-    <div class="c-dashboard-card__table-wrapper">
-      <div class="c-dashboard-card__scroll-shadow" aria-hidden="true"></div>
-      <p-table
-        [value]="rows"
-        styleClass="c-dashboard-card__table p-datatable-sm p-datatable-gridlines"
-        [scrollable]="true"
-        scrollHeight="flex"
-      >
-        <ng-template pTemplate="header">
-          <tr>
-            @for (col of columns; track col.field) {
-              <th>{{ col.header }}</th>
-            }
-            <th class="c-dashboard-card__actions-header"></th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-row>
-          <tr
-            (mouseenter)="onRowMouseEnter(row.id)"
-            (mouseleave)="onRowMouseLeave()"
-          >
-            <td>{{ row.reference }}</td>
-            <td>{{ row.beneficiaire }}</td>
-            <td>{{ row.type }}</td>
-            <td>{{ row.statut }}</td>
-            <td>{{ row.montant }}</td>
-            <td>{{ row.dateCreation }}</td>
-            <td>{{ row.echeance }}</td>
-            <td class="c-dashboard-card__actions-cell">
-              @if (hoveredRowId() === row.id) {
-                <div class="c-dashboard-card__row-actions">
-                  <p-button icon="pi pi-eye" [rounded]="true" [text]="true" size="small" ariaLabel="View" />
-                  <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" size="small" ariaLabel="Edit" />
-                  <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" size="small" ariaLabel="Delete" />
-                </div>
-              }
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
+  <!-- ====== Card header: title + badge + menu ====== -->
+  <div class="c-dashboard-card__header">
+    <div class="c-dashboard-card__header-left">
+      <h3 class="c-dashboard-card__title">Liste des documents</h3>
+      <p-badge [value]="totalLabel()" severity="secondary" />
     </div>
-  </p-card>
+    <p-button
+      icon="bi bi-three-dots-vertical"
+      [text]="true"
+      (onClick)="cardMenu.toggle($event)"
+      ariaLabel="Actions"
+    />
+    <p-menu #cardMenu [model]="cardMenuItems" [popup]="true" />
+  </div>
+
+  <!-- ====== DataTable ====== -->
+  <div class="c-dashboard-card__table-wrapper">
+    <p-table
+      [value]="allRows"
+      [paginator]="true"
+      [rows]="rowsPerPage()"
+      [first]="first()"
+      [totalRecords]="totalRecords()"
+      [showCurrentPageReport]="false"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [scrollable]="true"
+      scrollHeight="flex"
+      [sortMode]="'single'"
+      styleClass="c-dashboard-card__table"
+      (onPage)="onPageChange($event)"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="oa">
+            <div class="c-dashboard-card__th-inner">
+              <span>O.A</span> <p-sortIcon field="oa" />
+            </div>
+          </th>
+          <th pSortableColumn="ter">
+            <div class="c-dashboard-card__th-inner">
+              <span>Ter.</span> <p-sortIcon field="ter" />
+            </div>
+          </th>
+          <th pSortableColumn="source">
+            <div class="c-dashboard-card__th-inner">
+              <span>Source</span> <p-sortIcon field="source" />
+            </div>
+          </th>
+          <th pSortableColumn="identification">
+            <div class="c-dashboard-card__th-inner">
+              <span>Identification</span> <p-sortIcon field="identification" />
+            </div>
+          </th>
+          <th pSortableColumn="nom">
+            <div class="c-dashboard-card__th-inner">
+              <span>Nom</span> <p-sortIcon field="nom" />
+            </div>
+          </th>
+          <th pSortableColumn="type" class="c-dashboard-card__col-type">
+            <div class="c-dashboard-card__th-inner">
+              <span>Type</span> <p-sortIcon field="type" />
+            </div>
+          </th>
+          <th pSortableColumn="dateReception">
+            <div class="c-dashboard-card__th-inner">
+              <span>Date de réception</span> <p-sortIcon field="dateReception" />
+            </div>
+          </th>
+          <!-- Empty header for actions column -->
+          <th class="c-dashboard-card__actions-th"></th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-row>
+        <tr
+          (mouseenter)="onRowMouseEnter(row.id)"
+          (mouseleave)="onRowMouseLeave()"
+        >
+          <td>{{ row.oa }}</td>
+          <td>{{ row.ter }}</td>
+          <td>{{ row.source }}</td>
+          <td>{{ row.identification }}</td>
+          <td>
+            <p-button [label]="row.nom" [link]="true" styleClass="c-dashboard-card__link-btn" />
+          </td>
+          <td class="c-dashboard-card__col-type">
+            <p-button [label]="row.type" [link]="true" styleClass="c-dashboard-card__link-btn" />
+          </td>
+          <td>{{ row.dateReception }}</td>
+          <!-- Sticky actions cell – visible on row hover -->
+          <td class="c-dashboard-card__actions-td">
+            @if (hoveredRowId() === row.id) {
+              <div class="c-dashboard-card__row-actions">
+                <p-button icon="bi bi-unlock"             [text]="true" ariaLabel="Déverrouiller" />
+                <p-button icon="bi bi-eye"                [text]="true" ariaLabel="Voir" />
+                <p-button icon="bi bi-box-arrow-up-right" [text]="true" ariaLabel="Ouvrir" />
+                <p-button icon="bi bi-plus-lg"            [text]="true" ariaLabel="Ajouter" />
+                <p-button icon="bi bi-arrow-left-right"   [text]="true" ariaLabel="Comparer" />
+              </div>
+            }
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </div>

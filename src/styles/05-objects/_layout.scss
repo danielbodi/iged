@@ -28,7 +28,9 @@
 
 .o-dashboard-layout {
   display: flex;
-  min-height: 100vh;
+  height: 100dvh;
+  width: 100dvw;
+  overflow: hidden;
   background-color: $color-bg-app;
 }
 
@@ -54,17 +56,67 @@
   width: $nav-second-level-width;
 }
 
-// Main content area
+// Main content area (wraps top-bar + main-content)
 .o-dashboard-layout__main {
   flex: 1;
   min-width: 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   background-color: $color-bg-app;
 }
 
 .o-dashboard-layout__top-bar {
   flex-shrink: 0;
+}
+
+// --------------------------------------------------------------------------
+// Main content – padding: 16px, gap: 24px  (Figma: "Main content" 653:25244)
+// Contains: H1 page heading, toolbar, datatable card
+// --------------------------------------------------------------------------
+.o-dashboard-layout__main-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-24; // 24px
+  padding: $spacing-16; // 16px
+  overflow: hidden; // no scroll here – scroll lives inside the table container
+}
+
+// Page heading (H1 + version badge)
+.o-dashboard-layout__page-heading {
+  display: flex;
+  align-items: center;
+  gap: $spacing-8;
+  flex-shrink: 0;
+}
+
+.o-dashboard-layout__page-title {
+  font-family: $font-family-base;
+  font-weight: $font-weight-bold;
+  font-size: 24px; // font/size/2xl
+  line-height: 40px; // line/height/40
+  letter-spacing: 0;
+  color: #000;
+  margin: 0;
+}
+
+.o-dashboard-layout__page-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 $spacing-8;
+  border-radius: 10.5px;
+  background-color: #f5f7fa; // badge/primary/background
+  font-family: $font-family-base;
+  font-weight: $font-weight-bold;
+  font-size: 10px; // badge/sm/font/size
+  color: #262626; // badge/primary/color
+  line-height: normal;
 }
 
 .o-dashboard-layout__toolbar {
@@ -74,7 +126,14 @@
 .o-dashboard-layout__content {
   flex: 1;
   min-height: 0;
-  padding: $spacing-20;
   display: flex;
   flex-direction: column;
+
+  // Angular component host elements must participate in the flex chain
+  > * {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
 }
