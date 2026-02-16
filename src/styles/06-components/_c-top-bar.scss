@@ -1,0 +1,65 @@
+@use '../01-settings/variables' as *;
+
+// ==========================================================================
+// Top Bar
+// Figma: toggle | breadcrumb | ... | search | actions | user badge
+// ==========================================================================
+
+.c-top-bar {
+  display: flex;
+  align-items: center;
+  gap: $spacing-12;
+  padding: $spacing-12 $spacing-16;
+  background-color: $color-bg-surface;
+  border-block-end: 1px solid $color-border;
+  height: 57px;
+}
+
+.c-top-bar__toggle {
+  flex-shrink: 0;
+}
+
+.c-top-bar__breadcrumb {
+  flex: 1;
+  min-width: 0;
+}
+
+.c-top-bar__right {
+  display: flex;
+  align-items: center;
+  gap: $spacing-8;
+  flex-shrink: 0;
+}
+
+.c-top-bar__actions {
+  display: flex;
+  align-items: center;
+}
+
+// --------------------------------------------------------------------------
+// User menu: avatar + chevron dropdown
+// --------------------------------------------------------------------------
+.c-top-bar__user-menu {
+  position: relative;
+}
+
+.c-top-bar__avatar-btn {
+  display: flex;
+  align-items: center;
+  gap: $spacing-8;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: $radius-md;
+  cursor: pointer;
+}
+
+.c-top-bar__avatar-img {
+  display: block;
+  border-radius: $radius-md;
+}
+
+.c-top-bar__avatar-chevron {
+  font-size: 16px;
+  color: $color-text-secondary;
+}

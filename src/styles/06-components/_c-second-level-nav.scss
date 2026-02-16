@@ -1,0 +1,196 @@
+@use '../01-settings/variables' as *;
+@use '../02-tools/mixins' as *;
+
+// ==========================================================================
+// Second Level Navigation
+// Figma 713-185027: exact paddings, gaps, heights from design context
+// ==========================================================================
+
+.c-second-level-nav {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: $nav-second-level-width;
+  background-color: $color-bg-app; // surface/50 = #f6f6f6
+  border-inline-end: 1px solid $color-border;
+}
+
+// --------------------------------------------------------------------------
+// Header - title + search toggle, or search input
+// --------------------------------------------------------------------------
+.c-second-level-nav__header {
+  flex-shrink: 0;
+  padding: $spacing-12 14px;
+  border-block-end: 1px solid $color-border;
+  display: flex;
+  align-items: center;
+  gap: $spacing-8;
+  height: 57px;
+}
+
+.c-second-level-nav__title {
+  flex: 1;
+  min-width: 0;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  line-height: 22px;
+  @include truncate;
+}
+
+// Expandable search: fill available space when expanded
+.c-second-level-nav__search {
+  flex-shrink: 0;
+
+  &--expanded {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Menu container - holds all section groups
+// --------------------------------------------------------------------------
+.c-second-level-nav__menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+  flex: 1;
+}
+
+// --------------------------------------------------------------------------
+// Menu section wrapper - groups section header + its items
+// Figma: flex-col, gap 4px, px 14px, py 8px
+// --------------------------------------------------------------------------
+.c-second-level-nav__menu-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 8px 14px;
+  width: 100%;
+}
+
+// --------------------------------------------------------------------------
+// Section header (e.g. "DOSSIERS")
+// Figma: flex, gap 8px, px 8px, py 4px, rounded 8px
+// Font: 14px, semibold, uppercase, rgba(0,0,0,0.5), line-height 22px
+// --------------------------------------------------------------------------
+.c-second-level-nav__section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 4px 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: $radius-md;
+  font-family: inherit;
+  text-align: start;
+  @include interactive-states;
+}
+
+.c-second-level-nav__section-label {
+  flex: 1;
+  min-width: 0;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.5);
+  line-height: 22px;
+  letter-spacing: 0;
+}
+
+.c-second-level-nav__section-chevron {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+// --------------------------------------------------------------------------
+// Menu item
+// Figma: flex, height 30px, px 8px, py 4px, rounded 8px (border-radius-lg)
+// Font: 14px, semibold, rgba(0,0,0,0.8), line-height 22px, ellipsis
+// --------------------------------------------------------------------------
+.c-second-level-nav__item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 30px;
+  padding: 4px 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: $radius-md;
+  color: rgba(0, 0, 0, 0.8);
+  font-family: inherit;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  line-height: 22px;
+  text-align: start;
+  @include interactive-states;
+
+  &--active {
+    background-color: $color-bg-active;
+  }
+}
+
+.c-second-level-nav__item-label {
+  flex: 1;
+  min-width: 0;
+  @include truncate;
+}
+
+// --------------------------------------------------------------------------
+// Badge / counter
+// Figma: 16x20px, font 12px, semibold, centered, line-height 20px
+// Attention: bold, red (--red/600 = #f21c0d)
+// --------------------------------------------------------------------------
+.c-second-level-nav__badge {
+  flex-shrink: 0;
+  width: 16px;
+  height: 20px;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  line-height: 20px;
+  text-align: center;
+
+  &--attention {
+    color: #f21c0d;
+    font-weight: $font-weight-bold;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Footer - version + "Quoi de neuf ?"
+// --------------------------------------------------------------------------
+.c-second-level-nav__footer {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-2;
+  padding: $spacing-12;
+  border-block-start: 1px solid $color-border;
+}
+
+.c-second-level-nav__version {
+  font-size: $font-size-xs;
+  color: $color-text-muted;
+}
+
+.c-second-level-nav__whats-new {
+  font-size: $font-size-xs;
+  color: $color-blue-600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

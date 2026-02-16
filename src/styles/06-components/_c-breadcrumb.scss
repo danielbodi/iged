@@ -1,0 +1,9 @@
+// ==========================================================================
+// p-breadcrumb – remove bg/border for flat appearance in top-bar
+// ==========================================================================
+
+.p-breadcrumb {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}

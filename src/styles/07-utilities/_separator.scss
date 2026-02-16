@@ -1,0 +1,22 @@
+@use '../01-settings/variables' as *;
+
+// ==========================================================================
+// Separator utility – reusable horizontal divider line
+// Figma token: transparent/black/50 (rgba(0, 0, 0, 0.05))
+// Usage: <div class="u-separator"></div>
+//        <hr  class="u-separator" />
+// ==========================================================================
+
+.u-separator {
+  width: 100%;
+  height: 0;
+  border: none;
+  border-top: 1px solid $color-separator;
+  margin: 0;
+  padding: 0;
+}
+
+// Modifier: inside a CSS grid, span all columns
+.u-separator--full-row {
+  grid-column: 1 / -1;
+}

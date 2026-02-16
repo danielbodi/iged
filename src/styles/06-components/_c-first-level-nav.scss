@@ -1,0 +1,163 @@
+@use '../01-settings/variables' as *;
+
+// ==========================================================================
+// First Level Navigation
+// Figma: collapsed = 52px icon-only rail, expanded on hover = 171px with labels
+// Background: surface/50 (#f6f6f6), border-right: transparent/black/100
+// Active item: bg transparent/black/50, icon in brand red
+// Font: Open Sans SemiBold 14px, line-height 22px
+// Items: 40px tall, padding 10px, border-radius 10px, gap 16px, icon 20px
+// ==========================================================================
+
+.c-first-level-nav {
+  display: flex;
+  flex-direction: column;
+  width: $nav-first-level-width-collapsed;
+  height: 100%;
+  background-color: $color-bg-app;
+  border-inline-end: 1px solid $color-border;
+  overflow-x: clip;
+  overflow-y: auto;
+  transition: width $transition-base;
+  position: relative;
+  z-index: 20;
+
+  // Expanded on hover - widens to show labels, overlays content
+  &--expanded {
+    width: $nav-first-level-width-expanded;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    box-shadow: $shadow-lg;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Logo container - 52px height
+// Collapsed: overflow clips the text portion, only icon shows
+// Expanded: full logo with "Solidaris" text visible
+// --------------------------------------------------------------------------
+.c-first-level-nav__logo {
+  display: flex;
+  align-items: center;
+  height: $nav-first-level-logo-height;
+  flex-shrink: 0;
+  padding-inline-start: 14px;
+  overflow: hidden;
+}
+
+.c-first-level-nav__logo-img {
+  flex-shrink: 0;
+  height: 32px;
+  width: auto;
+}
+
+// --------------------------------------------------------------------------
+// Menu items container
+// Figma: flex-col, gap 16px, padding-x 6px
+// --------------------------------------------------------------------------
+.c-first-level-nav__items {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: $spacing-16;
+  padding-inline: $spacing-6;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+
+// --------------------------------------------------------------------------
+// Individual menu item
+// Figma: 40px height, padding 10px, gap 10px, border-radius 10px
+// Default: transparent bg, text rgba(0,0,0,0.8)
+// Hover: bg rgba(0,0,0,0.05)
+// Pressed: bg rgba(0,0,0,0.1)
+// Active: bg rgba(0,0,0,0.05) persistent
+// --------------------------------------------------------------------------
+.c-first-level-nav__item {
+  display: flex;
+  align-items: center;
+  gap: $spacing-10;
+  width: 100%;
+  height: $nav-first-level-item-size;
+  padding: $spacing-10;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: $radius-lg;
+  color: $color-text-primary;
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  line-height: 22px;
+  text-align: start;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background-color: $color-bg-hover;
+  }
+
+  &:active {
+    background-color: $color-bg-pressed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-border-focus;
+    outline-offset: 2px;
+  }
+
+  // Active state - persistent bg, icon stays in brand red
+  &--active {
+    background-color: $color-bg-active;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Icon (Bootstrap Icons)
+// Figma: 20x20px - use font-size to control size
+// The `bi` class handles display and font-family
+// --------------------------------------------------------------------------
+.c-first-level-nav__icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: $nav-first-level-icon-size;
+  height: $nav-first-level-icon-size;
+  font-size: $nav-first-level-icon-size;
+  line-height: 1;
+
+  // Active item icon turns red
+  .c-first-level-nav__item--active & {
+    color: $color-active;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Label (visible only in expanded state)
+// Figma: Open Sans SemiBold 14px, line-height 22px, text-overflow ellipsis
+// --------------------------------------------------------------------------
+.c-first-level-nav__label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  line-height: 22px;
+  letter-spacing: 0;
+}
+
+// --------------------------------------------------------------------------
+// Avatar container (bottom area placeholder)
+// --------------------------------------------------------------------------
+.c-first-level-nav__avatar {
+  flex-shrink: 0;
+  height: 48px;
+  padding-inline: $spacing-12;
+}

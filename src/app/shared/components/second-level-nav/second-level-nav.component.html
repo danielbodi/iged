@@ -1,0 +1,66 @@
+<div class="c-second-level-nav" [class.c-second-level-nav--expanded]="expanded()">
+  <!-- Header: title + expandable search -->
+  <div class="c-second-level-nav__header">
+    @if (!searchExpanded()) {
+      <span class="c-second-level-nav__title">{{ title() }}</span>
+    }
+    <app-expandable-search
+      class="c-second-level-nav__search"
+      [class.c-second-level-nav__search--expanded]="searchExpanded()"
+      placeholder="Rechercher..."
+      ariaLabel="Rechercher dans le menu"
+      (expandedChange)="onSearchExpandedChange($event)"
+      (search)="onSearchChange($event)"
+    />
+  </div>
+
+  <!-- Menu: sections with collapsible items -->
+  <nav class="c-second-level-nav__menu" aria-label="Second level navigation">
+    @for (section of filteredSections(); track section.id) {
+      <div class="c-second-level-nav__menu-section">
+        <!-- Section header -->
+        <button
+          type="button"
+          class="c-second-level-nav__section"
+          (click)="toggleSection(section)"
+          [attr.aria-expanded]="!section.collapsed"
+        >
+          <span class="c-second-level-nav__section-label">{{ section.label }}</span>
+          <i
+            class="c-second-level-nav__section-chevron pi"
+            [ngClass]="section.collapsed ? 'pi-chevron-down' : 'pi-chevron-up'"
+            aria-hidden="true"
+          ></i>
+        </button>
+
+        <!-- Section items -->
+        @if (!section.collapsed) {
+          @for (item of section.items; track item.id) {
+            <button
+              type="button"
+              class="c-second-level-nav__item"
+              [class.c-second-level-nav__item--active]="activeItemId() === item.id"
+              (click)="onItemClick(item.id)"
+            >
+              <span class="c-second-level-nav__item-label">{{ item.label }}</span>
+              @if (item.count !== undefined) {
+                <span
+                  class="c-second-level-nav__badge"
+                  [class.c-second-level-nav__badge--attention]="item.attention"
+                >
+                  {{ item.count }}
+                </span>
+              }
+            </button>
+          }
+        }
+      </div>
+    }
+  </nav>
+
+  <!-- Footer -->
+  <div class="c-second-level-nav__footer">
+    <span class="c-second-level-nav__version">Version 0.1.001</span>
+    <a href="#" class="c-second-level-nav__whats-new">Quoi de neuf ?</a>
+  </div>
+</div>

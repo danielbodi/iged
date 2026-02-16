@@ -1,0 +1,51 @@
+@use 'variables' as *;
+
+// ==========================================================================
+// CSS Custom Properties - for use in templates and JS
+// Mapped from Figma design tokens
+// ==========================================================================
+:root {
+  // Text
+  --color-text-primary: #{$color-text-primary};
+  --color-text-secondary: #{$color-text-secondary};
+  --color-text-muted: #{$color-text-muted};
+  --color-text-inverse: #{$color-text-inverse};
+
+  // Backgrounds
+  --color-bg-app: #{$color-bg-app};
+  --color-bg-surface: #{$color-bg-surface};
+  --color-bg-hover: #{$color-bg-hover};
+  --color-bg-pressed: #{$color-bg-pressed};
+  --color-bg-active: #{$color-bg-active};
+
+  // Borders
+  --color-border: #{$color-border};
+  --color-border-strong: #{$color-border-strong};
+  --color-border-focus: #{$color-border-focus};
+
+  // Brand
+  --color-active: #{$color-active};
+  --color-attention: #{$color-attention};
+
+  // Spacing
+  --spacing-xs: #{$spacing-xs};
+  --spacing-sm: #{$spacing-sm};
+  --spacing-md: #{$spacing-md};
+  --spacing-lg: #{$spacing-lg};
+  --spacing-xl: #{$spacing-xl};
+
+  // Radii
+  --radius-sm: #{$radius-sm};
+  --radius-md: #{$radius-md};
+  --radius-lg: #{$radius-lg};
+  --radius-xl: #{$radius-xl};
+  --radius-full: #{$radius-full};
+
+  // Shadows
+  --shadow-sm: #{$shadow-sm};
+  --shadow-md: #{$shadow-md};
+  --shadow-lg: #{$shadow-lg};
+
+  // Typography
+  --font-family-base: #{$font-family-base};
+}

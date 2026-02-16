@@ -1,0 +1,15 @@
+@use '../01-settings/variables' as *;
+
+// ==========================================================================
+// p-badge – small variant for card headers (Figma: 693:25477)
+// ==========================================================================
+
+.c-dashboard-card .p-badge {
+  font-size: 10px;
+  font-weight: $font-weight-bold;
+  min-width: 20px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 10.5px;
+  padding: 0 $spacing-8;
+}

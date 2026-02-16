@@ -1,0 +1,155 @@
+@use '../01-settings/variables' as *;
+
+// ==========================================================================
+// Dashboard Card
+// Figma: 693:25473
+// Card container with title + badge header, sortable datatable, paginator
+// Scrollable on both axes when content overflows
+// ==========================================================================
+
+.c-dashboard-card {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  background-color: $color-bg-surface;
+  border: 1px solid $color-border-strong;
+  border-radius: $radius-xl; // 12px
+  overflow: hidden;
+}
+
+// --------------------------------------------------------------------------
+// Header: "Liste des documents" + badge + three-dots menu
+// Figma: flex, items-center, justify-between, pr: 12px
+// --------------------------------------------------------------------------
+.c-dashboard-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-8;
+  padding: $spacing-16;
+  padding-right: $spacing-12;
+  flex-shrink: 0;
+
+  // PrimeNG button host element should not grow
+  > p-button {
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+}
+
+.c-dashboard-card__header-left {
+  display: flex;
+  align-items: center;
+  gap: $spacing-16;
+  min-width: 0;
+}
+
+.c-dashboard-card__title {
+  margin: 0;
+  font-family: $font-family-base;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-md; // 16px
+  line-height: 24px;
+  color: #262626;
+}
+
+// --------------------------------------------------------------------------
+// Table wrapper – fills remaining card space, scrollable both axes
+// --------------------------------------------------------------------------
+.c-dashboard-card__table-wrapper {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+// --------------------------------------------------------------------------
+// Link-style button for "Nom" and "Type" columns
+// Uses PrimeNG p-button [link]="true" with custom styleClass
+// Figma: button/link/color = #487395
+// --------------------------------------------------------------------------
+.c-dashboard-card__link-btn.p-button {
+  padding: 0;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  white-space: nowrap;
+  text-align: left;
+}
+
+// --------------------------------------------------------------------------
+// Type column – wider to fit long values
+// --------------------------------------------------------------------------
+.c-dashboard-card__col-type {
+  min-width: 300px;
+}
+
+// --------------------------------------------------------------------------
+// Inner flex wrapper inside th: label left, sort icon right
+// --------------------------------------------------------------------------
+.c-dashboard-card__th-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-8;
+  width: 100%;
+
+  > span {
+    flex: 1;
+    min-width: 0;
+  }
+
+  > p-sortIcon {
+    flex-shrink: 0;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Row actions – sticky last column, visible on hover
+// Figma: 693:26754 "table row-actions"
+// --------------------------------------------------------------------------
+
+// Empty header cell for actions column – collapsed, sticky right
+.c-dashboard-card__actions-th {
+  width: 0;
+  min-width: 0;
+  padding: 0 !important;
+  border-bottom: none !important;
+  position: sticky;
+  right: 0;
+  z-index: 3;
+  background-color: $color-bg-surface;
+}
+
+// Body cell – sticky right, zero-width, allows overflow for action bar
+.c-dashboard-card__actions-td {
+  width: 0;
+  min-width: 0;
+  padding: 0 !important;
+  border-bottom: none !important;
+  position: sticky;
+  right: 0;
+  z-index: 3;
+  background: transparent;
+  overflow: visible;
+}
+
+// Action buttons bar – floating panel on the right edge
+// Stretches to the full row height via top:0 + bottom:0, buttons centered vertically
+// Figma: bg white, rounded-tl/bl 8px, shadow -4px 0 20px rgba(0,0,0,0.25)
+// gap: spacing-75 (4px), px: 16px
+.c-dashboard-card__row-actions {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: $spacing-4;
+  padding-inline: $spacing-16;
+  background-color: $color-bg-surface;
+  border-radius: $radius-md 0 0 $radius-md; // rounded left corners only
+  box-shadow: -4px 0 20px 0 rgba(0, 0, 0, 0.25);
+  white-space: nowrap;
+}
