@@ -32,7 +32,7 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/iged/browser
+          path: dist/iged-app/browser
 
   deploy:
     needs: build
