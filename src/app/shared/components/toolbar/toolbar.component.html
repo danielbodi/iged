@@ -6,9 +6,7 @@
   <div class="c-toolbar__header">
     <div class="c-toolbar__title-group">
       <h3 class="c-toolbar__title">Filtres</h3>
-      @if (expanded()) {
-        <p-tag [value]="'' + activeFilterCount()" [rounded]="true" severity="secondary" />
-      }
+      <p-tag [value]="'' + activeFilterCount()" [rounded]="true" severity="secondary" />
     </div>
 
     <div class="c-toolbar__header-actions">

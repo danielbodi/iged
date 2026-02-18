@@ -68,6 +68,21 @@
               <span>Date de réception</span> <p-sortIcon field="dateReception" />
             </div>
           </th>
+          <th pSortableColumn="dateEntree">
+            <div class="c-dashboard-card__th-inner">
+              <span>Date d'entrée</span> <p-sortIcon field="dateEntree" />
+            </div>
+          </th>
+          <th pSortableColumn="dateEtat">
+            <div class="c-dashboard-card__th-inner">
+              <span>Date état</span> <p-sortIcon field="dateEtat" />
+            </div>
+          </th>
+          <th>
+            <div class="c-dashboard-card__th-inner">
+              <span>Etat</span>
+            </div>
+          </th>
           <!-- Empty header for actions column -->
           <th class="c-dashboard-card__actions-th"></th>
         </tr>
@@ -89,6 +104,9 @@
             <p-button [label]="row.type" [link]="true" styleClass="c-dashboard-card__link-btn" />
           </td>
           <td>{{ row.dateReception }}</td>
+          <td>{{ row.dateEntree }}</td>
+          <td>{{ row.dateEtat }}</td>
+          <td><p-tag value="Reçu" severity="success" /></td>
           <!-- Sticky actions cell – visible on row hover -->
           <td class="c-dashboard-card__actions-td">
             @if (hoveredRowId() === row.id) {

@@ -168,6 +168,33 @@
 }
 
 // --------------------------------------------------------------------------
+// Empty state – no search results
+// --------------------------------------------------------------------------
+.c-second-level-nav__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-12;
+  padding: 40px 24px;
+  flex: 1;
+}
+
+.c-second-level-nav__empty-illustration {
+  width: 120px;
+  height: auto;
+  opacity: 0.85;
+}
+
+.c-second-level-nav__empty-message {
+  margin: 0;
+  font-size: $font-size-sm;
+  color: $color-text-muted;
+  text-align: center;
+  line-height: 1.5;
+}
+
+// --------------------------------------------------------------------------
 // Footer - version + "Quoi de neuf ?"
 // --------------------------------------------------------------------------
 .c-second-level-nav__footer {

@@ -39,6 +39,15 @@ export class SecondLevelNavComponent {
   /** Menu structure: sections with grouped items (from Figma 692-24851) */
   sections: SecondLevelSection[] = [
     {
+      id: 'at-dc',
+      label: 'AT & DC',
+      collapsed: false,
+      items: [
+        { id: 'at-dc-demande', label: 'Demande de paiement' },
+        { id: 'at-dc-mp-rente', label: 'Rente (IND)' }
+      ]
+    },
+    {
       id: 'autres',
       label: 'AUTRES',
       collapsed: false,
@@ -47,8 +56,6 @@ export class SecondLevelNavComponent {
         { id: 'risques-sociaux', label: 'Risques sociaux' },
         { id: 'actes-naissance', label: 'Actes de naissance' },
         { id: 'administration-mc', label: 'Administration MC (ADM)' },
-        { id: 'at-dc-demande', label: 'AT & DC - Demande de paiement' },
-        { id: 'at-dc-mp-rente', label: 'AT, DC & MP - Rente (IND)' },
         { id: 'attestations-vacances', label: 'Attestations de vacances' },
         { id: 'autorisation-tp', label: 'Autorisation T.P. (ADM)' },
         { id: 'courriers-entrants', label: 'Courriers entrants' },
@@ -102,19 +109,29 @@ export class SecondLevelNavComponent {
     return id ? titles[id] ?? id : 'Menu';
   });
 
-  /** Filtered sections based on search query */
+  /** Filtered sections based on search query (matches section names AND item labels) */
   filteredSections = computed(() => {
     const q = this.searchQuery().toLowerCase().trim();
     if (!q) return this.sections;
 
     return this.sections
-      .map(section => ({
-        ...section,
-        items: section.items.filter(item =>
-          item.label.toLowerCase().includes(q)
-        )
-      }))
+      .map(section => {
+        const sectionMatches = section.label.toLowerCase().includes(q);
+        return {
+          ...section,
+          collapsed: false,
+          items: sectionMatches
+            ? section.items
+            : section.items.filter(item => item.label.toLowerCase().includes(q))
+        };
+      })
       .filter(section => section.items.length > 0);
+  });
+
+  /** Whether the search produced no results */
+  noResults = computed(() => {
+    const q = this.searchQuery().trim();
+    return q.length > 0 && this.filteredSections().length === 0;
   });
 
   onSearchExpandedChange(expanded: boolean): void {
