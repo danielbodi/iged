@@ -83,6 +83,7 @@
   gap: $spacing-24; // 24px
   padding: $spacing-16; // 16px
   overflow: hidden; // no scroll here – scroll lives inside the table container
+  position: relative; // positioning context for expanded toolbar overlay
 }
 
 // Page heading (H1 + version badge)

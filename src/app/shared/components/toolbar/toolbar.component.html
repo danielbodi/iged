@@ -30,16 +30,30 @@
         }
       </div>
 
-      <!-- Filter buttons (SelectButton) -->
-      <div class="c-toolbar__filter-buttons">
-        <p-selectbutton
-          [options]="filterOptions"
-          [ngModel]="selectedFilter()"
-          (ngModelChange)="selectedFilter.set($event)"
-          optionLabel="label"
-          optionValue="value"
-        />
-      </div>
+      <!-- Saved filter picker: SelectButton or Select (hidden when none saved) -->
+      @if (savedFilters().length > 0) {
+        <div class="c-toolbar__filter-buttons">
+          @if (!useDropdown()) {
+            <p-selectbutton
+              [options]="filterOptions()"
+              [ngModel]="selectedFilterId()"
+              (ngModelChange)="onFilterSelect($event)"
+              optionLabel="label"
+              optionValue="value"
+            />
+          } @else {
+            <p-select
+              [options]="filterOptions()"
+              [ngModel]="selectedFilterId()"
+              (ngModelChange)="onFilterSelect($event)"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Choisir un filtre"
+              styleClass="c-toolbar__filter-select"
+            />
+          }
+        </div>
+      }
 
       <!-- Toggle expand/collapse -->
       <button
@@ -111,10 +125,19 @@
         (onClick)="onSaveAndApply()"
       />
       <p-button
+        label="Renommer"
+        icon="bi bi-pencil"
+        severity="secondary"
+        [outlined]="true"
+        [disabled]="!hasSelectedFilter()"
+        (onClick)="onRename()"
+      />
+      <p-button
         label="Supprimer"
         icon="bi bi-trash3"
         severity="secondary"
         [outlined]="true"
+        [disabled]="!hasSelectedFilter()"
         (onClick)="onDelete()"
       />
       <p-button
@@ -127,3 +150,131 @@
     </div>
   }
 </div>
+
+<!-- ====== Save filter dialog ====== -->
+<p-dialog
+  header="Sauvegarder le filtre"
+  [visible]="showSaveDialog()"
+  (visibleChange)="showSaveDialog.set($event)"
+  [modal]="true"
+  [style]="{ width: '400px' }"
+  [closable]="true"
+>
+  <div class="c-toolbar__save-dialog-body">
+    <label class="c-toolbar__field-label" for="save-filter-name">Nom du filtre</label>
+    <input
+      id="save-filter-name"
+      type="text"
+      pInputText
+      [ngModel]="saveFilterName()"
+      (ngModelChange)="saveFilterName.set($event)"
+      placeholder="Ex: Mes dossiers urgents"
+      class="c-toolbar__save-dialog-input"
+      (keydown.enter)="onConfirmSave()"
+    />
+    @if (duplicateExists()) {
+      <small class="c-toolbar__save-dialog-hint">
+        Ce nom existe déjà. Choisissez un autre nom ou remplacez le filtre existant.
+      </small>
+    }
+  </div>
+  <ng-template #footer>
+    <div class="c-toolbar__save-dialog-footer">
+      <p-button
+        label="Annuler"
+        severity="secondary"
+        [outlined]="true"
+        (onClick)="showSaveDialog.set(false)"
+      />
+      @if (duplicateExists()) {
+        <p-button
+          label="Remplacer"
+          icon="bi bi-arrow-repeat"
+          (onClick)="onReplace()"
+        />
+      } @else {
+        <p-button
+          label="Sauvegarder"
+          icon="bi bi-floppy"
+          [disabled]="!saveFilterName().trim()"
+          (onClick)="onConfirmSave()"
+        />
+      }
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- ====== Delete confirmation dialog ====== -->
+<p-dialog
+  header="Supprimer le filtre"
+  [visible]="showDeleteDialog()"
+  (visibleChange)="showDeleteDialog.set($event)"
+  [modal]="true"
+  [style]="{ width: '400px' }"
+  [closable]="true"
+>
+  <p class="c-toolbar__dialog-message">
+    Voulez-vous vraiment supprimer le filtre <strong>{{ selectedFilterName() }}</strong> ?
+  </p>
+  <ng-template #footer>
+    <div class="c-toolbar__save-dialog-footer">
+      <p-button
+        label="Annuler"
+        severity="secondary"
+        [outlined]="true"
+        (onClick)="showDeleteDialog.set(false)"
+      />
+      <p-button
+        label="Supprimer"
+        icon="bi bi-trash3"
+        severity="danger"
+        (onClick)="onConfirmDelete()"
+      />
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- ====== Rename filter dialog ====== -->
+<p-dialog
+  header="Renommer le filtre"
+  [visible]="showRenameDialog()"
+  (visibleChange)="showRenameDialog.set($event)"
+  [modal]="true"
+  [style]="{ width: '400px' }"
+  [closable]="true"
+>
+  <div class="c-toolbar__save-dialog-body">
+    <label class="c-toolbar__field-label" for="rename-filter-name">Nouveau nom</label>
+    <input
+      id="rename-filter-name"
+      type="text"
+      pInputText
+      [ngModel]="renameFilterName()"
+      (ngModelChange)="renameFilterName.set($event)"
+      placeholder="Ex: Mes dossiers urgents"
+      class="c-toolbar__save-dialog-input"
+      (keydown.enter)="onConfirmRename()"
+    />
+    @if (renameDuplicateExists()) {
+      <small class="c-toolbar__save-dialog-hint">
+        Ce nom est déjà utilisé par un autre filtre.
+      </small>
+    }
+  </div>
+  <ng-template #footer>
+    <div class="c-toolbar__save-dialog-footer">
+      <p-button
+        label="Annuler"
+        severity="secondary"
+        [outlined]="true"
+        (onClick)="showRenameDialog.set(false)"
+      />
+      <p-button
+        label="Renommer"
+        icon="bi bi-pencil"
+        [disabled]="!renameFilterName().trim() || renameDuplicateExists()"
+        (onClick)="onConfirmRename()"
+      />
+    </div>
+  </ng-template>
+</p-dialog>

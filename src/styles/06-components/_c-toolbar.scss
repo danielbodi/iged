@@ -29,6 +29,10 @@
 }
 
 .c-toolbar--expanded {
+  position: absolute;
+  z-index: 10;
+  left: $spacing-16;
+  right: $spacing-16;
   padding-bottom: 0; // expanded: footer handles its own bottom spacing
   box-shadow:
     0 9px 29px 0 rgba(0, 0, 0, 0.06),
@@ -121,10 +125,41 @@
 }
 
 // --------------------------------------------------------------------------
-// Filter buttons (SelectButton)
+// Filter buttons (SelectButton / Select / invite)
 // --------------------------------------------------------------------------
 .c-toolbar__filter-buttons {
   flex-shrink: 0;
+}
+
+.c-toolbar__filter-select {
+  min-width: 200px;
+}
+
+.c-toolbar__save-invite {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-8;
+  padding: $spacing-8 $spacing-12;
+  border: 1px dashed $color-border-strong;
+  border-radius: $radius-md;
+  background: transparent;
+  color: $color-text-secondary;
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+  transition: color $transition-fast, border-color $transition-fast, background-color $transition-fast;
+  white-space: nowrap;
+
+  &:hover {
+    color: $color-text-primary;
+    border-color: $color-text-primary;
+    background-color: $color-bg-hover;
+  }
+
+  i {
+    font-size: 14px;
+  }
 }
 
 // --------------------------------------------------------------------------
@@ -216,4 +251,36 @@
   .p-autocomplete {
     width: 100%;
   }
+}
+
+// --------------------------------------------------------------------------
+// Save filter dialog
+// --------------------------------------------------------------------------
+.c-toolbar__save-dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-8;
+}
+
+.c-toolbar__save-dialog-input {
+  width: 100%;
+}
+
+.c-toolbar__save-dialog-hint {
+  color: #c4580a;
+  font-size: $font-size-sm;
+  line-height: 1.4;
+}
+
+.c-toolbar__save-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: $spacing-8;
+}
+
+.c-toolbar__dialog-message {
+  margin: 0;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: $color-text-primary;
 }
