@@ -69,6 +69,7 @@
   border: 1px solid $color-border;
   border-radius: $radius-xl;
   overflow: hidden;
+  padding: $spacing-16; // spacing-300 = 16px
 }
 
 .c-dashboard-overview__card-header {
@@ -134,6 +135,11 @@
 
   tbody > tr:last-child > td {
     border-block-end: none;
+  }
+
+  // TOTAL row: add border-bottom when expanded (has detail tbody below)
+  tbody:has(+ tbody) .c-dashboard-overview__total-row > td {
+    border-block-end: 1px solid $color-border;
   }
 
   &--sticky-header thead > tr > th {
@@ -224,8 +230,6 @@
 
 // Expanded detail rows – in second tbody, same table layout as parent
 .c-dashboard-overview__detail-row {
-  background: rgba(0, 0, 0, 0.02);
-
   td {
     vertical-align: middle;
   }
