@@ -17,10 +17,10 @@
 // Tabs: plain tablist, NO background on wrapper (per Figma)
 .c-dashboard-overview__tabs {
   :deep(.p-tablist) {
+    border-block-end: 1px solid $color-border;
     background: unset;
     background-color: unset;
     border: none;
-    border-block-end: 1px solid $color-border;
   }
 
   :deep(.p-tablist-tab-list) {
@@ -77,7 +77,7 @@
   align-items: center;
   gap: $spacing-12;
   padding: $spacing-16;
-  border-block-end: 1px solid $color-border;
+  border-block-end: none; // No bottom border per design
 }
 
 .c-dashboard-overview__card-icon {
