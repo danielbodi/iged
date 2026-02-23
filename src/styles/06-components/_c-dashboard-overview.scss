@@ -237,6 +237,7 @@
 
 // Link-style buttons – PrimeNG p-button [link]="true"
 // Match demande de paiement (dashboard-card): Figma button/link/color = #487395
+// No outline/border on hover/focus – override PrimeNG defaults
 .c-dashboard-overview__detail-link.p-button,
 .c-dashboard-overview__num-link.p-button {
   display: block;
@@ -246,16 +247,19 @@
   font-size: inherit;
   font-weight: $font-weight-semibold;
   color: $color-link;
-  background: transparent;
-  border: none;
-  outline: none;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
   white-space: nowrap;
 
   &:hover,
   &:focus,
-  &:focus-visible {
-    outline: none;
-    box-shadow: none;
+  &:focus-visible,
+  &:active {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
     color: $color-link;
     text-decoration: underline;
   }
