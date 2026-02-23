@@ -5,8 +5,12 @@
   (mouseleave)="onNavMouseLeave()"
   aria-label="First level navigation"
 >
-  <!-- Logo: logomark only when collapsed, full logo when expanded -->
-  <div class="c-first-level-nav__logo">
+  <!-- Logo: logomark only when collapsed, full logo when expanded - click navigates to home -->
+  <a
+    class="c-first-level-nav__logo"
+    [routerLink]="homeRoute"
+    aria-label="Accueil"
+  >
     @if (hovered()) {
       <img
         class="c-first-level-nav__logo-img"
@@ -22,7 +26,7 @@
         height="32"
       />
     }
-  </div>
+  </a>
 
   <!-- Menu items -->
   <div class="c-first-level-nav__items">

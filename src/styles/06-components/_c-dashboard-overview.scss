@@ -1,0 +1,270 @@
+@use '../01-settings/variables' as *;
+
+// ==========================================================================
+// Dashboard Overview - Vue d'ensemble
+// Tablist (no background), one card per first-level nav item (except Dashboard)
+// Each card: icon + label + expandable TOTAL row with 6 cols, Tag + sum.svg
+// Typography: Open Sans from variables
+// ==========================================================================
+
+.c-dashboard-overview__content {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-24;
+  min-height: 0;
+}
+
+// Tabs: plain tablist, NO background on wrapper (per Figma)
+.c-dashboard-overview__tabs {
+  :deep(.p-tablist) {
+    background: unset;
+    background-color: unset;
+    border: none;
+    border-block-end: 1px solid $color-border;
+  }
+
+  :deep(.p-tablist-tab-list) {
+    border: none;
+    background: transparent !important;
+    width: fit-content !important;
+  }
+
+  :deep(.p-tablist-content) {
+    padding-block-start: $spacing-16;
+  }
+
+  :deep(.p-tablist-viewport) {
+    background: transparent !important;
+  }
+
+  :deep(.p-tablist-tab-list .p-tab) {
+    background: transparent !important;
+  }
+
+  :deep(.p-tablist-tab-list .p-tab:hover) {
+    background: rgba(0, 0, 0, 0.04) !important;
+  }
+
+  :deep(.p-tabpanels) {
+    background: unset;
+    background-color: unset;
+  }
+
+  :deep(.p-tabpanel) {
+    background: transparent !important;
+  }
+}
+
+// Cards: one per first-level nav item (except Dashboard)
+.c-dashboard-overview__cards {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-16;
+  background: unset;
+  background-color: unset;
+}
+
+.c-dashboard-overview__card {
+  background: $color-bg-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-xl;
+  overflow: hidden;
+}
+
+.c-dashboard-overview__card-header {
+  display: flex;
+  align-items: center;
+  gap: $spacing-12;
+  padding: $spacing-16;
+  border-block-end: 1px solid $color-border;
+}
+
+.c-dashboard-overview__card-icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: $color-text-secondary;
+}
+
+.c-dashboard-overview__card-title {
+  margin: 0;
+  font-family: $font-family-base;
+  font-size: $font-size-md;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-base;
+  color: $color-text-primary;
+}
+
+// Table: sticky header, TOTAL row with Tag + sum icon
+// Custom table with thead + tbody (TOTAL) + tbody (details when expanded) – same layout as Figma
+.c-dashboard-overview__table {
+  .c-dashboard-overview__table-el {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead {
+    background: $color-bg-surface;
+
+    > tr > th {
+      font-family: $font-family-base;
+      font-size: $font-size-base;
+      font-weight: $font-weight-semibold;
+      color: $color-text-primary;
+      padding: 12px $spacing-16 13px;
+      border-block-end: 1px solid $color-border;
+      background-color: $color-bg-surface;
+      text-align: left;
+    }
+  }
+
+  tbody > tr > td {
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    font-weight: $font-weight-regular;
+    color: $color-text-primary;
+    padding: $spacing-12 $spacing-16;
+    border-block-end: 1px solid $color-separator;
+  }
+
+  tbody > tr:last-child > td {
+    border-block-end: none;
+  }
+
+  &--sticky-header thead > tr > th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: $color-bg-surface;
+    box-shadow: 0 1px 0 $color-border;
+  }
+
+  &--sticky-header .c-dashboard-overview__total-row > td {
+    position: sticky;
+    top: 40px; // header row height
+    z-index: 1;
+    background-color: $color-bg-surface;
+    box-shadow: 0 1px 0 $color-separator;
+  }
+}
+
+.c-dashboard-overview__label-col {
+  min-width: 180px;
+  width: 30%;
+}
+
+// Sortable th – match Indemnités (dashboard-card) datatable hover style
+.c-dashboard-overview__sortable-col {
+  white-space: nowrap;
+  cursor: pointer;
+  background-color: $color-bg-surface;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: $color-bg-hover;
+    color: $color-text-primary;
+  }
+
+  &--disabled {
+    cursor: default;
+    opacity: 0.6;
+
+    &:hover {
+      background-color: inherit;
+      color: inherit;
+    }
+  }
+}
+
+.c-dashboard-overview__th-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-8;
+  width: 100%;
+
+  > span {
+    flex: 1;
+    min-width: 0;
+  }
+
+  > .pi {
+    flex-shrink: 0;
+    font-size: 0.75em;
+    opacity: 0.7;
+  }
+}
+
+.c-dashboard-overview__total-label {
+  font-weight: $font-weight-bold;
+  margin-inline-start: $spacing-4;
+}
+
+// Tag with sum icon + value (custom content: img + span)
+.c-dashboard-overview__total-tag {
+  display: inline-flex !important;
+  align-items: center;
+  gap: $spacing-6;
+
+  .c-dashboard-overview__sum-icon,
+  span {
+    flex-shrink: 0;
+  }
+}
+
+.c-dashboard-overview__sum-icon {
+  width: 11px;
+  height: 11px;
+}
+
+// Expanded detail rows – in second tbody, same table layout as parent
+.c-dashboard-overview__detail-row {
+  background: rgba(0, 0, 0, 0.02);
+
+  td {
+    vertical-align: middle;
+  }
+}
+
+.c-dashboard-overview__num-col {
+  text-align: left;
+}
+
+// Link-style buttons – PrimeNG p-button [link]="true"
+// Match demande de paiement (dashboard-card): Figma button/link/color = #487395
+.c-dashboard-overview__detail-link.p-button,
+.c-dashboard-overview__num-link.p-button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: $font-weight-semibold;
+  color: $color-link;
+  background: transparent;
+  border: none;
+  outline: none;
+  white-space: nowrap;
+
+  &:hover,
+  &:focus,
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+    color: $color-link;
+    text-decoration: underline;
+  }
+}
+
+.c-dashboard-overview__detail-link.p-button {
+  text-align: start;
+}
+
+.c-dashboard-overview__num-link.p-button {
+  text-align: left;
+}

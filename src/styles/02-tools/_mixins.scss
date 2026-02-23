@@ -38,3 +38,17 @@
 @mixin nav-item-states {
   @include interactive-states;
 }
+
+// ==========================================================================
+// Typography - Heading/heading-sm (Figma design token)
+// Figma: Font(family: font/family/heading, style: Bold, size: font/size/md,
+// weight: font/weight/Bold, lineHeight: font/size/2xl, letterSpacing: 0)
+// ==========================================================================
+@mixin heading-sm {
+  font-family: $font-family-base;
+  font-size: $font-size-md;
+  font-weight: $font-weight-bold;
+  line-height: 24px;
+  letter-spacing: 0;
+  color: $color-text-primary;
+}

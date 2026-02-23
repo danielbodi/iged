@@ -1,21 +1,18 @@
-import { Component, input, output, signal, computed } from '@angular/core';
+import { Component, inject, input, output, signal, computed } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter, map, startWith } from 'rxjs';
 import { ExpandableSearchComponent } from '../expandable-search/expandable-search.component';
+import {
+  SECTIONS_BY_FIRST_LEVEL,
+  getActiveItemIdFromUrl,
+  type SecondLevelSection,
+  type SecondLevelMenuItem
+} from '../../../core/config/nav-config';
 
-export interface SecondLevelSection {
-  id: string;
-  label: string;
-  collapsed: boolean;
-  items: SecondLevelMenuItem[];
-}
-
-export interface SecondLevelMenuItem {
-  id: string;
-  label: string;
-  count?: number;
-  attention?: boolean;
-}
+export type { SecondLevelSection, SecondLevelMenuItem };
 
 @Component({
   selector: 'app-second-level-nav',
@@ -33,66 +30,13 @@ export class SecondLevelNavComponent {
   searchExpanded = signal(false);
   searchQuery = signal('');
 
-  /** Active menu item – default to AT & DC - Demande de paiement (IND) */
-  activeItemId = signal<string | null>('at-dc-demande');
+  /** Dashboard second-level menu */
+  dashboardSections = SECTIONS_BY_FIRST_LEVEL['dashboard'] ?? [];
 
-  /** Menu structure: sections with grouped items (from Figma 692-24851) */
-  sections: SecondLevelSection[] = [
-    {
-      id: 'at-dc',
-      label: 'AT & DC',
-      collapsed: false,
-      items: [
-        { id: 'at-dc-demande', label: 'Demande de paiement' },
-        { id: 'at-dc-mp-rente', label: 'Rente (IND)' }
-      ]
-    },
-    {
-      id: 'autres',
-      label: 'AUTRES',
-      collapsed: false,
-      items: [
-        { id: 'remboursements-164', label: 'Remboursements 164 (U6F44)' },
-        { id: 'risques-sociaux', label: 'Risques sociaux' },
-        { id: 'actes-naissance', label: 'Actes de naissance' },
-        { id: 'administration-mc', label: 'Administration MC (ADM)' },
-        { id: 'attestations-vacances', label: 'Attestations de vacances' },
-        { id: 'autorisation-tp', label: 'Autorisation T.P. (ADM)' },
-        { id: 'courriers-entrants', label: 'Courriers entrants' },
-        { id: 'dossiers-ffe', label: 'Dossiers FFE (IND)' },
-        { id: 'declaration-revenus', label: 'Déclaration de revenus (225)' },
-        { id: 'detention', label: 'Détention' },
-        { id: 'feuilles-renseignements', label: 'Feuilles de renseignements' },
-        { id: 'fraude-sociale', label: 'Fraude Sociale' }
-      ]
-    },
-    {
-      id: 'encodage',
-      label: 'ENCODAGE',
-      collapsed: false,
-      items: [
-        { id: 'encodage-documents', label: 'Encodage des documents' },
-        { id: 'encodage-indus', label: 'Encodage des indus' }
-      ]
-    },
-    {
-      id: 'gestion',
-      label: 'GESTION',
-      collapsed: false,
-      items: [
-        { id: 'gestion-calcs', label: "Gestion des CALC's" },
-        { id: 'gestion-cartes-reprise', label: 'Gestion des cartes de reprise' },
-        { id: 'gestion-certificats-itt', label: 'Gestion des certificats ITT' },
-        { id: 'gestion-comptes-bancaires', label: 'Gestion des comptes bancaires' },
-        { id: 'gestion-flux-z100', label: 'Gestion des flux Z100' },
-        { id: 'gestion-indus', label: 'Gestion des indus' },
-        { id: 'gestion-listes', label: 'Gestion des listes' },
-        { id: 'gestion-listes-medicales', label: 'Gestion des listes médicales' },
-        { id: 'gestion-proratas', label: 'Gestion des proratas' },
-        { id: 'gestion-rejets-macro', label: 'Gestion des rejets MACRO' }
-      ]
-    }
-  ];
+  /** Indemnités second-level menu */
+  indemnitesSections = SECTIONS_BY_FIRST_LEVEL['indemnites'] ?? [];
+
+  private router = inject(Router);
 
   /** Title derived from the active first-level section */
   title = computed(() => {
@@ -112,9 +56,13 @@ export class SecondLevelNavComponent {
   /** Filtered sections based on search query (matches section names AND item labels) */
   filteredSections = computed(() => {
     const q = this.searchQuery().toLowerCase().trim();
-    if (!q) return this.sections;
+    const sourceSections = this.activeSectionId() === 'dashboard'
+      ? this.dashboardSections
+      : this.indemnitesSections;
 
-    return this.sections
+    if (!q) return sourceSections;
+
+    return sourceSections
       .map(section => {
         const sectionMatches = section.label.toLowerCase().includes(q);
         return {
@@ -134,6 +82,19 @@ export class SecondLevelNavComponent {
     return q.length > 0 && this.filteredSections().length === 0;
   });
 
+  /** Active menu item derived from current route; falls back to 'at-dc-demande' when no match */
+  activeItemId = toSignal(
+    this.router.events.pipe(
+      filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+      map(() => getActiveItemIdFromUrl(this.router.url)),
+      startWith(getActiveItemIdFromUrl(this.router.url))
+    ),
+    { initialValue: getActiveItemIdFromUrl(this.router.url) }
+  );
+
+  /** Resolved active item id for template (handles null from toSignal) */
+  resolvedActiveItemId = computed(() => this.activeItemId() ?? 'at-dc-demande');
+
   onSearchExpandedChange(expanded: boolean): void {
     this.searchExpanded.set(expanded);
   }
@@ -146,10 +107,14 @@ export class SecondLevelNavComponent {
     section.collapsed = !section.collapsed;
   }
 
-  /** Only 'at-dc-demande' is an active route for now */
+  /** Handle second-level item click: navigate if routable, always collapse panel */
   onItemClick(itemId: string): void {
-    if (itemId !== 'at-dc-demande') return;
-    this.activeItemId.set(itemId);
+    if (itemId === 'vue-ensemble') {
+      this.router.navigateByUrl('/dashboard/vue-ensemble');
+    } else if (itemId === 'at-dc-demande') {
+      this.router.navigateByUrl('/');
+    }
+    // Always emit so the parent collapses the second-level panel
     this.itemClick.emit();
   }
 }

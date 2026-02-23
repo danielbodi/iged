@@ -1,0 +1,443 @@
+<div class="o-dashboard-layout c-dashboard-overview">
+  <aside class="o-dashboard-layout__first-level">
+    <app-first-level-nav (itemClick)="layout.expandSecondLevel($event)" />
+  </aside>
+
+  <aside
+    class="o-dashboard-layout__second-level"
+    [class.o-dashboard-layout__second-level--expanded]="layout.secondLevelExpanded()"
+  >
+    <app-second-level-nav
+      [expanded]="layout.secondLevelExpanded()"
+      [activeSectionId]="layout.activeFirstLevelId()"
+      (itemClick)="layout.onSecondLevelItemClick()"
+      (close)="layout.collapseSecondLevel()"
+    />
+  </aside>
+
+  <main class="o-dashboard-layout__main">
+    <header class="o-dashboard-layout__top-bar">
+      <app-top-bar
+        [secondLevelExpanded]="layout.secondLevelExpanded()"
+        (toggleSecondLevel)="layout.toggleSecondLevel()"
+      />
+    </header>
+
+    <div class="o-dashboard-layout__main-content o-dashboard-layout__main-content--scrollable">
+      <section class="o-dashboard-layout__page-heading">
+        <h1 class="o-dashboard-layout__page-title">Vue d'ensemble</h1>
+      </section>
+
+      <section class="c-dashboard-overview__content">
+        <p-tabs
+          [value]="activeTab"
+          (valueChange)="onTabChange($event)"
+          class="c-dashboard-overview__tabs"
+        >
+          <p-tablist>
+            <p-tab value="journee">Avancement de la journée</p-tab>
+            <p-tab value="indicateurs">Indicateurs de traitement</p-tab>
+          </p-tablist>
+
+          <p-tabpanels>
+            <p-tabpanel value="journee">
+              <div class="c-dashboard-overview__cards">
+                @for (item of tableCardItems; track item.id) {
+                  <article class="c-dashboard-overview__card">
+                    <div class="c-dashboard-overview__card-header">
+                      <i class="c-dashboard-overview__card-icon bi" [ngClass]="item.icon" aria-hidden="true"></i>
+                      <h3 class="c-dashboard-overview__card-title">{{ item.label }}</h3>
+                    </div>
+                    @let totalRow = getTotalRow(item.id);
+                    @let sortState = getSortState(item.id);
+                    <div class="c-dashboard-overview__table c-dashboard-overview__table--sticky-header">
+                      <table class="c-dashboard-overview__table-el">
+                        <thead>
+                          <tr>
+                            <th class="c-dashboard-overview__label-col"></th>
+                          <th
+                            class="c-dashboard-overview__sortable-col"
+                            [class.c-dashboard-overview__sortable-col--disabled]="!isCardExpanded(item.id)"
+                            (click)="onSort(item.id, 'recus')"
+                          >
+                            <div class="c-dashboard-overview__th-inner">
+                              <span>Reçus</span>
+                              <i class="pi" [ngClass]="sortState?.field === 'recus' ? (sortState?.order === 1 ? 'pi-sort-amount-up' : 'pi-sort-amount-down') : 'pi-sort-alt'"></i>
+                            </div>
+                          </th>
+                          <th
+                            class="c-dashboard-overview__sortable-col"
+                            [class.c-dashboard-overview__sortable-col--disabled]="!isCardExpanded(item.id)"
+                            (click)="onSort(item.id, 'attribues')"
+                          >
+                            <div class="c-dashboard-overview__th-inner">
+                              <span>Attribués</span>
+                              <i class="pi" [ngClass]="sortState?.field === 'attribues' ? (sortState?.order === 1 ? 'pi-sort-amount-up' : 'pi-sort-amount-down') : 'pi-sort-alt'"></i>
+                            </div>
+                          </th>
+                          <th
+                            class="c-dashboard-overview__sortable-col"
+                            [class.c-dashboard-overview__sortable-col--disabled]="!isCardExpanded(item.id)"
+                            (click)="onSort(item.id, 'enTraitement')"
+                          >
+                            <div class="c-dashboard-overview__th-inner">
+                              <span>En traitement</span>
+                              <i class="pi" [ngClass]="sortState?.field === 'enTraitement' ? (sortState?.order === 1 ? 'pi-sort-amount-up' : 'pi-sort-amount-down') : 'pi-sort-alt'"></i>
+                            </div>
+                          </th>
+                          <th
+                            class="c-dashboard-overview__sortable-col"
+                            [class.c-dashboard-overview__sortable-col--disabled]="!isCardExpanded(item.id)"
+                            (click)="onSort(item.id, 'incomplets')"
+                          >
+                            <div class="c-dashboard-overview__th-inner">
+                              <span>Incomplets</span>
+                              <i class="pi" [ngClass]="sortState?.field === 'incomplets' ? (sortState?.order === 1 ? 'pi-sort-amount-up' : 'pi-sort-amount-down') : 'pi-sort-alt'"></i>
+                            </div>
+                          </th>
+                          <th
+                            class="c-dashboard-overview__sortable-col"
+                            [class.c-dashboard-overview__sortable-col--disabled]="!isCardExpanded(item.id)"
+                            (click)="onSort(item.id, 'rappels')"
+                          >
+                            <div class="c-dashboard-overview__th-inner">
+                              <span>Rappels</span>
+                              <i class="pi" [ngClass]="sortState?.field === 'rappels' ? (sortState?.order === 1 ? 'pi-sort-amount-up' : 'pi-sort-amount-down') : 'pi-sort-alt'"></i>
+                            </div>
+                          </th>
+                          <th
+                            class="c-dashboard-overview__sortable-col"
+                            [class.c-dashboard-overview__sortable-col--disabled]="!isCardExpanded(item.id)"
+                            (click)="onSort(item.id, 'clotures')"
+                          >
+                            <div class="c-dashboard-overview__th-inner">
+                              <span>Clôturés</span>
+                              <i class="pi" [ngClass]="sortState?.field === 'clotures' ? (sortState?.order === 1 ? 'pi-sort-amount-up' : 'pi-sort-amount-down') : 'pi-sort-alt'"></i>
+                            </div>
+                          </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="c-dashboard-overview__total-row">
+                          <td class="c-dashboard-overview__label-col">
+                            <p-button
+                              [text]="true"
+                              severity="secondary"
+                              [icon]="isCardExpanded(item.id) ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                              ariaLabel="Afficher les détails"
+                              (onClick)="isCardExpanded(item.id) ? onRowCollapse(item.id) : onRowExpand(item.id)"
+                            />
+                            <span class="c-dashboard-overview__total-label">{{ totalRow.label }}</span>
+                          </td>
+                          <td>
+                            <p-tag severity="secondary" class="c-dashboard-overview__total-tag">
+                              <img [src]="sumIcon" alt="" class="c-dashboard-overview__sum-icon" aria-hidden="true" />
+                              <span>{{ totalRow.recus }}</span>
+                            </p-tag>
+                          </td>
+                          <td>
+                            <p-tag severity="secondary" class="c-dashboard-overview__total-tag">
+                              <img [src]="sumIcon" alt="" class="c-dashboard-overview__sum-icon" aria-hidden="true" />
+                              <span>{{ totalRow.attribues }}</span>
+                            </p-tag>
+                          </td>
+                          <td>
+                            <p-tag severity="secondary" class="c-dashboard-overview__total-tag">
+                              <img [src]="sumIcon" alt="" class="c-dashboard-overview__sum-icon" aria-hidden="true" />
+                              <span>{{ totalRow.enTraitement }}</span>
+                            </p-tag>
+                          </td>
+                          <td>
+                            <p-tag severity="secondary" class="c-dashboard-overview__total-tag">
+                              <img [src]="sumIcon" alt="" class="c-dashboard-overview__sum-icon" aria-hidden="true" />
+                              <span>{{ totalRow.incomplets }}</span>
+                            </p-tag>
+                          </td>
+                          <td>
+                            <p-tag severity="secondary" class="c-dashboard-overview__total-tag">
+                              <img [src]="sumIcon" alt="" class="c-dashboard-overview__sum-icon" aria-hidden="true" />
+                              <span>{{ totalRow.rappels }}</span>
+                            </p-tag>
+                          </td>
+                          <td>
+                            <p-tag severity="secondary" class="c-dashboard-overview__total-tag">
+                              <img [src]="sumIcon" alt="" class="c-dashboard-overview__sum-icon" aria-hidden="true" />
+                              <span>{{ totalRow.clotures }}</span>
+                            </p-tag>
+                          </td>
+                        </tr>
+                        </tbody>
+                        @if (isCardExpanded(item.id)) {
+                          <tbody>
+                            @for (detail of getSortedDetails(item.id); track detail.id) {
+                              <tr class="c-dashboard-overview__detail-row">
+                                <td class="c-dashboard-overview__label-col">
+                                  <p-button
+                                    [label]="detail.label"
+                                    [link]="true"
+                                    styleClass="c-dashboard-overview__detail-link"
+                                    (onClick)="onItemClick(detail.id)"
+                                  />
+                                </td>
+                                <td class="c-dashboard-overview__num-col">
+                                  <p-button
+                                    [label]="detail.recus.toString()"
+                                    [link]="true"
+                                    styleClass="c-dashboard-overview__num-link"
+                                    (onClick)="onItemClick(detail.id)"
+                                  />
+                                </td>
+                                <td class="c-dashboard-overview__num-col">
+                                  <p-button
+                                    [label]="detail.attribues.toString()"
+                                    [link]="true"
+                                    styleClass="c-dashboard-overview__num-link"
+                                    (onClick)="onItemClick(detail.id)"
+                                  />
+                                </td>
+                                <td class="c-dashboard-overview__num-col">
+                                  <p-button
+                                    [label]="detail.enTraitement.toString()"
+                                    [link]="true"
+                                    styleClass="c-dashboard-overview__num-link"
+                                    (onClick)="onItemClick(detail.id)"
+                                  />
+                                </td>
+                                <td class="c-dashboard-overview__num-col">
+                                  <p-button
+                                    [label]="detail.incomplets.toString()"
+                                    [link]="true"
+                                    styleClass="c-dashboard-overview__num-link"
+                                    (onClick)="onItemClick(detail.id)"
+                                  />
+                                </td>
+                                <td class="c-dashboard-overview__num-col">
+                                  <p-button
+                                    [label]="detail.rappels.toString()"
+                                    [link]="true"
+                                    styleClass="c-dashboard-overview__num-link"
+                                    (onClick)="onItemClick(detail.id)"
+                                  />
+                                </td>
+                                <td class="c-dashboard-overview__num-col">
+                                  <p-button
+                                    [label]="detail.clotures.toString()"
+                                    [link]="true"
+                                    styleClass="c-dashboard-overview__num-link"
+                                    (onClick)="onItemClick(detail.id)"
+                                  />
+                                </td>
+                              </tr>
+                            }
+                          </tbody>
+                        }
+                      </table>
+                    </div>
+                  </article>
+                }
+              </div>
+            </p-tabpanel>
+
+            <p-tabpanel value="indicateurs">
+              <div class="c-dashboard-overview__cards">
+                @for (item of tableCardItems; track item.id) {
+                  <article class="c-dashboard-overview__card">
+                    <div class="c-dashboard-overview__card-header">
+                      <i class="c-dashboard-overview__card-icon bi" [ngClass]="item.icon" aria-hidden="true"></i>
+                      <h3 class="c-dashboard-overview__card-title">{{ item.label }}</h3>
+                    </div>
+                    @let totalRow = getTotalRow(item.id);
+                    @let sortState = getSortState(item.id);
+                    <div class="c-dashboard-overview__table c-dashboard-overview__table--sticky-header">
+                      <table class="c-dashboard-overview__table-el">
+                        <thead>
+                          <tr>
+                            <th class="c-dashboard-overview__label-col"></th>
+                          <th
+                            class="c-dashboard-overview__sortable-col"
+                            [class.c-dashboard-overview__sortable-col--disabled]="!isCardExpanded(item.id)"
+                            (click)="onSort(item.id, 'recus')"
+                          >
+                            <div class="c-dashboard-overview__th-inner">
+                              <span>Reçus</span>
+                              <i class="pi" [ngClass]="sortState?.field === 'recus' ? (sortState?.order === 1 ? 'pi-sort-amount-up' : 'pi-sort-amount-down') : 'pi-sort-alt'"></i>
+                            </div>
+                          </th>
+                          <th
+                            class="c-dashboard-overview__sortable-col"
+                            [class.c-dashboard-overview__sortable-col--disabled]="!isCardExpanded(item.id)"
+                            (click)="onSort(item.id, 'attribues')"
+                          >
+                            <div class="c-dashboard-overview__th-inner">
+                              <span>Attribués</span>
+                              <i class="pi" [ngClass]="sortState?.field === 'attribues' ? (sortState?.order === 1 ? 'pi-sort-amount-up' : 'pi-sort-amount-down') : 'pi-sort-alt'"></i>
+                            </div>
+                          </th>
+                          <th
+                            class="c-dashboard-overview__sortable-col"
+                            [class.c-dashboard-overview__sortable-col--disabled]="!isCardExpanded(item.id)"
+                            (click)="onSort(item.id, 'enTraitement')"
+                          >
+                            <div class="c-dashboard-overview__th-inner">
+                              <span>En traitement</span>
+                              <i class="pi" [ngClass]="sortState?.field === 'enTraitement' ? (sortState?.order === 1 ? 'pi-sort-amount-up' : 'pi-sort-amount-down') : 'pi-sort-alt'"></i>
+                            </div>
+                          </th>
+                          <th
+                            class="c-dashboard-overview__sortable-col"
+                            [class.c-dashboard-overview__sortable-col--disabled]="!isCardExpanded(item.id)"
+                            (click)="onSort(item.id, 'incomplets')"
+                          >
+                            <div class="c-dashboard-overview__th-inner">
+                              <span>Incomplets</span>
+                              <i class="pi" [ngClass]="sortState?.field === 'incomplets' ? (sortState?.order === 1 ? 'pi-sort-amount-up' : 'pi-sort-amount-down') : 'pi-sort-alt'"></i>
+                            </div>
+                          </th>
+                          <th
+                            class="c-dashboard-overview__sortable-col"
+                            [class.c-dashboard-overview__sortable-col--disabled]="!isCardExpanded(item.id)"
+                            (click)="onSort(item.id, 'rappels')"
+                          >
+                            <div class="c-dashboard-overview__th-inner">
+                              <span>Rappels</span>
+                              <i class="pi" [ngClass]="sortState?.field === 'rappels' ? (sortState?.order === 1 ? 'pi-sort-amount-up' : 'pi-sort-amount-down') : 'pi-sort-alt'"></i>
+                            </div>
+                          </th>
+                          <th
+                            class="c-dashboard-overview__sortable-col"
+                            [class.c-dashboard-overview__sortable-col--disabled]="!isCardExpanded(item.id)"
+                            (click)="onSort(item.id, 'clotures')"
+                          >
+                            <div class="c-dashboard-overview__th-inner">
+                              <span>Clôturés</span>
+                              <i class="pi" [ngClass]="sortState?.field === 'clotures' ? (sortState?.order === 1 ? 'pi-sort-amount-up' : 'pi-sort-amount-down') : 'pi-sort-alt'"></i>
+                            </div>
+                          </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="c-dashboard-overview__total-row">
+                          <td class="c-dashboard-overview__label-col">
+                            <p-button
+                              [text]="true"
+                              severity="secondary"
+                              [icon]="isCardExpanded(item.id) ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                              ariaLabel="Afficher les détails"
+                              (onClick)="isCardExpanded(item.id) ? onRowCollapse(item.id) : onRowExpand(item.id)"
+                            />
+                            <span class="c-dashboard-overview__total-label">{{ totalRow.label }}</span>
+                          </td>
+                          <td>
+                            <p-tag severity="secondary" class="c-dashboard-overview__total-tag">
+                              <img [src]="sumIcon" alt="" class="c-dashboard-overview__sum-icon" aria-hidden="true" />
+                              <span>{{ totalRow.recus }}</span>
+                            </p-tag>
+                          </td>
+                          <td>
+                            <p-tag severity="secondary" class="c-dashboard-overview__total-tag">
+                              <img [src]="sumIcon" alt="" class="c-dashboard-overview__sum-icon" aria-hidden="true" />
+                              <span>{{ totalRow.attribues }}</span>
+                            </p-tag>
+                          </td>
+                          <td>
+                            <p-tag severity="secondary" class="c-dashboard-overview__total-tag">
+                              <img [src]="sumIcon" alt="" class="c-dashboard-overview__sum-icon" aria-hidden="true" />
+                              <span>{{ totalRow.enTraitement }}</span>
+                            </p-tag>
+                          </td>
+                          <td>
+                            <p-tag severity="secondary" class="c-dashboard-overview__total-tag">
+                              <img [src]="sumIcon" alt="" class="c-dashboard-overview__sum-icon" aria-hidden="true" />
+                              <span>{{ totalRow.incomplets }}</span>
+                            </p-tag>
+                          </td>
+                          <td>
+                            <p-tag severity="secondary" class="c-dashboard-overview__total-tag">
+                              <img [src]="sumIcon" alt="" class="c-dashboard-overview__sum-icon" aria-hidden="true" />
+                              <span>{{ totalRow.rappels }}</span>
+                            </p-tag>
+                          </td>
+                          <td>
+                            <p-tag severity="secondary" class="c-dashboard-overview__total-tag">
+                              <img [src]="sumIcon" alt="" class="c-dashboard-overview__sum-icon" aria-hidden="true" />
+                              <span>{{ totalRow.clotures }}</span>
+                            </p-tag>
+                          </td>
+                        </tr>
+                        </tbody>
+                        @if (isCardExpanded(item.id)) {
+                          <tbody>
+                            @for (detail of getSortedDetails(item.id); track detail.id) {
+                              <tr class="c-dashboard-overview__detail-row">
+                                <td class="c-dashboard-overview__label-col">
+                                  <p-button
+                                    [label]="detail.label"
+                                    [link]="true"
+                                    styleClass="c-dashboard-overview__detail-link"
+                                    (onClick)="onItemClick(detail.id)"
+                                  />
+                                </td>
+                                <td class="c-dashboard-overview__num-col">
+                                  <p-button
+                                    [label]="detail.recus.toString()"
+                                    [link]="true"
+                                    styleClass="c-dashboard-overview__num-link"
+                                    (onClick)="onItemClick(detail.id)"
+                                  />
+                                </td>
+                                <td class="c-dashboard-overview__num-col">
+                                  <p-button
+                                    [label]="detail.attribues.toString()"
+                                    [link]="true"
+                                    styleClass="c-dashboard-overview__num-link"
+                                    (onClick)="onItemClick(detail.id)"
+                                  />
+                                </td>
+                                <td class="c-dashboard-overview__num-col">
+                                  <p-button
+                                    [label]="detail.enTraitement.toString()"
+                                    [link]="true"
+                                    styleClass="c-dashboard-overview__num-link"
+                                    (onClick)="onItemClick(detail.id)"
+                                  />
+                                </td>
+                                <td class="c-dashboard-overview__num-col">
+                                  <p-button
+                                    [label]="detail.incomplets.toString()"
+                                    [link]="true"
+                                    styleClass="c-dashboard-overview__num-link"
+                                    (onClick)="onItemClick(detail.id)"
+                                  />
+                                </td>
+                                <td class="c-dashboard-overview__num-col">
+                                  <p-button
+                                    [label]="detail.rappels.toString()"
+                                    [link]="true"
+                                    styleClass="c-dashboard-overview__num-link"
+                                    (onClick)="onItemClick(detail.id)"
+                                  />
+                                </td>
+                                <td class="c-dashboard-overview__num-col">
+                                  <p-button
+                                    [label]="detail.clotures.toString()"
+                                    [link]="true"
+                                    styleClass="c-dashboard-overview__num-link"
+                                    (onClick)="onItemClick(detail.id)"
+                                  />
+                                </td>
+                              </tr>
+                            }
+                          </tbody>
+                        }
+                      </table>
+                    </div>
+                  </article>
+                }
+              </div>
+            </p-tabpanel>
+          </p-tabpanels>
+        </p-tabs>
+      </section>
+    </div>
+  </main>
+</div>

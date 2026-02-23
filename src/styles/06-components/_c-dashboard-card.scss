@@ -68,14 +68,19 @@
 // --------------------------------------------------------------------------
 // Link-style button for "Nom" and "Type" columns
 // Uses PrimeNG p-button [link]="true" with custom styleClass
-// Figma: button/link/color = #487395
+// Figma: button/link/color = $color-link (#487395)
 // --------------------------------------------------------------------------
 .c-dashboard-card__link-btn.p-button {
   padding: 0;
   font-size: $font-size-base;
   font-weight: $font-weight-semibold;
+  color: $color-link;
   white-space: nowrap;
   text-align: left;
+
+  &:hover {
+    color: $color-link;
+  }
 }
 
 // --------------------------------------------------------------------------

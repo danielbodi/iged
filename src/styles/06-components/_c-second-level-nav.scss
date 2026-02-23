@@ -31,10 +31,7 @@
 .c-second-level-nav__title {
   flex: 1;
   min-width: 0;
-  font-size: $font-size-base;
-  font-weight: $font-weight-semibold;
-  color: $color-text-primary;
-  line-height: 22px;
+  @include heading-sm;
   @include truncate;
 }
 

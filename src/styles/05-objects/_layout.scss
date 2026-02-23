@@ -84,6 +84,11 @@
   padding: $spacing-16; // 16px
   overflow: hidden; // no scroll here – scroll lives inside the table container
   position: relative; // positioning context for expanded toolbar overlay
+  background-color: $color-bg-surface;
+
+  &--scrollable {
+    overflow-y: auto;
+  }
 }
 
 // Page heading (H1 + version badge)

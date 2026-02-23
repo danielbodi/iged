@@ -34,6 +34,11 @@ export class DashboardLayoutService {
     this._secondLevelExpanded.set(true);
   }
 
+  /** Set active first-level section without expanding (avoids reopening after collapse) */
+  setActiveFirstLevelId(sectionId: string): void {
+    this._activeFirstLevelId.set(sectionId);
+  }
+
   collapseSecondLevel(): void {
     this._secondLevelExpanded.set(false);
     this._activeFirstLevelId.set(null);
