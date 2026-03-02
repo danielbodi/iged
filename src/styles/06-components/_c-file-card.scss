@@ -1,0 +1,172 @@
+@use '../01-settings/variables' as *;
+
+// ==========================================================================
+// File Card – reusable card for "Vue d'ensemble" file items
+// Variants: --favorite-bg (white bg, used in "Mes files favorites")
+//           default (white bg, status values as links)
+// ==========================================================================
+
+.c-file-card {
+  display: inline-grid;
+  grid-template-rows: 43px fit-content(100%) fit-content(100%) fit-content(100%) fit-content(100%) fit-content(100%);
+  grid-template-columns: repeat(3, fit-content(100%));
+  padding: $spacing-16;
+  background: $color-bg-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-xl;
+  transition: box-shadow $transition-fast, border-color $transition-fast;
+
+  &:hover {
+    border-color: $color-primary-500;
+    box-shadow: $shadow-sm;
+    cursor: pointer;
+  }
+
+  // Favorite bg variant — elevated with shadow
+  &--favorite-bg {
+    background: $color-bg-surface;
+    box-shadow: $shadow-md;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Header: tag + favorite star
+// --------------------------------------------------------------------------
+.c-file-card__header {
+  grid-row: 1 / span 1;
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-8 $spacing-12;
+  gap: 0.4375rem;
+}
+
+.c-file-card__section-tag {
+  display: inline-flex !important;
+  align-items: center;
+  gap: $spacing-6;
+  max-width: calc(100% - 32px);
+
+  span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.c-file-card__section-tag-icon {
+  flex-shrink: 0;
+  font-size: 0.875rem;
+  line-height: 1;
+}
+
+.c-file-card__fav-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: $radius-sm;
+  background: transparent;
+  cursor: pointer;
+  color: $color-text-secondary;
+  font-size: 1rem;
+  transition: color $transition-fast, background-color $transition-fast;
+
+  &:hover {
+    background: $color-bg-hover;
+    color: $color-text-primary;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-border-focus;
+    outline-offset: 2px;
+  }
+
+  // Filled star when favorited — primary color per Figma
+  .bi-star-fill {
+    color: $color-primary-500;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Title
+// --------------------------------------------------------------------------
+.c-file-card__title {
+  grid-row: 2 / span 1;
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 0 $spacing-12 $spacing-8 $spacing-12;
+  gap: 0.625rem;
+  font-family: $font-family-base;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  line-height: 1.5rem;
+  letter-spacing: 0;
+  color: #3d3d3d;
+}
+
+// --------------------------------------------------------------------------
+// Statuses: rows 3–6 in the card grid
+// Row 3 & 5: labels  |  Row 4 & 6: values
+// --------------------------------------------------------------------------
+
+// Status labels (rows 3 & 5)
+.c-file-card__status-label {
+  padding: $spacing-8 $spacing-12;
+  padding-bottom: $spacing-8;
+  border-bottom: 1px solid #d1d1d1;
+  align-self: stretch;
+  justify-self: stretch;
+  font-family: $font-family-base;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-regular;
+  line-height: 1.25rem;
+  letter-spacing: 0;
+  color: #262626;
+}
+
+// Value cells (rows 4 & 6)
+.c-file-card__status-cell {
+  display: flex;
+  align-items: center;
+  gap: $spacing-8;
+  padding: $spacing-8 $spacing-12;
+  justify-self: stretch;
+}
+
+// PrimeNG link-button override for status numbers
+.c-file-card__status-link.p-button {
+  display: flex;
+  align-items: center;
+  gap: $spacing-8;
+  flex: 1 0 0;
+  padding: 0;
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $color-link;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  text-align: start;
+  white-space: nowrap;
+  min-width: 0;
+  line-height: normal;
+
+  &:hover,
+  &:focus,
+  &:focus-visible,
+  &:active {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    color: $color-link;
+    text-decoration: underline;
+  }
+}

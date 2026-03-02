@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { FirstLevelNavComponent } from '../../../shared/components/first-level-nav/first-level-nav.component';
 import { SecondLevelNavComponent } from '../../../shared/components/second-level-nav/second-level-nav.component';
@@ -6,47 +6,33 @@ import { TopBarComponent } from '../../../shared/components/top-bar/top-bar.comp
 import { DashboardLayoutService } from '../../../core/services/dashboard-layout.service';
 import { TabsModule } from 'primeng/tabs';
 import { TagModule } from 'primeng/tag';
-import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import {
   FIRST_LEVEL_ITEMS,
   getFlatItemsForFirstLevel,
   type FirstLevelNavItem,
-  type SecondLevelMenuItem
+  type SecondLevelMenuItem,
 } from '../../../core/config/nav-config';
+import {
+  FileCardComponent,
+  type FileCardData,
+} from '../../../shared/components/file-card/file-card.component';
 
-export interface OverviewDetailRow {
-  id: string;
-  label: string;
-  recus: number;
-  attribues: number;
-  enTraitement: number;
-  incomplets: number;
-  rappels: number;
-  clotures: number;
-}
-
-export interface OverviewTotalRow {
-  id: string;
-  label: string;
-  recus: number;
-  attribues: number;
-  enTraitement: number;
-  incomplets: number;
-  rappels: number;
-  clotures: number;
-  details: OverviewDetailRow[];
-}
-
-const COLUMNS = ['recus', 'attribues', 'enTraitement', 'incomplets', 'rappels', 'clotures'] as const;
-
+// ---------------------------------------------------------------------------
+// Mock data helpers
+// ---------------------------------------------------------------------------
 function hash(str: string): number {
   let h = 0;
   for (let i = 0; i < str.length; i++) h = (h << 5) - h + str.charCodeAt(i);
   return Math.abs(h);
 }
 
-function generateMockValues(itemId: string): Record<(typeof COLUMNS)[number], number> {
+function generateMockValues(
+  itemId: string,
+): Pick<
+  FileCardData,
+  'recus' | 'attribues' | 'enTraitement' | 'incomplets' | 'rappels' | 'clotures'
+> {
   const h = hash(itemId);
   return {
     recus: Math.abs((h % 70) + 15),
@@ -54,39 +40,21 @@ function generateMockValues(itemId: string): Record<(typeof COLUMNS)[number], nu
     enTraitement: Math.abs(((h >> 8) % 20) + 5),
     incomplets: Math.abs((h >> 12) % 12),
     rappels: Math.abs((h >> 16) % 8),
-    clotures: Math.abs(((h >> 20) % 60) + 20)
+    clotures: Math.abs(((h >> 20) % 60) + 20),
   };
 }
 
-function buildTotalRow(firstLevelId: string): OverviewTotalRow {
-  const items = getFlatItemsForFirstLevel(firstLevelId);
-  const details: OverviewDetailRow[] = items.map((item) => {
-    const v = generateMockValues(item.id);
-    return {
-      id: item.id,
-      label: item.label,
-      ...v
-    };
-  });
+/** Hardcoded favorite item ids for initial mock data */
+const INITIAL_FAVORITES = new Set(['indemnites--at-dc-demande', 'ac--mock-1', 'soins--mock-5']);
 
-  const totals = details.reduce(
-    (acc, d) => ({
-      recus: acc.recus + d.recus,
-      attribues: acc.attribues + d.attribues,
-      enTraitement: acc.enTraitement + d.enTraitement,
-      incomplets: acc.incomplets + d.incomplets,
-      rappels: acc.rappels + d.rappels,
-      clotures: acc.clotures + d.clotures
-    }),
-    { recus: 0, attribues: 0, enTraitement: 0, incomplets: 0, rappels: 0, clotures: 0 }
-  );
-
-  return {
-    id: `TOTAL-${firstLevelId}`,
-    label: 'TOTAL',
-    ...totals,
-    details
-  };
+// ---------------------------------------------------------------------------
+// Grouping model for "Autres files"
+// ---------------------------------------------------------------------------
+export interface SectionGroup {
+  id: string;
+  label: string;
+  icon: string;
+  cards: FileCardData[];
 }
 
 @Component({
@@ -99,111 +67,125 @@ function buildTotalRow(firstLevelId: string): OverviewTotalRow {
     TopBarComponent,
     TabsModule,
     TagModule,
-    ButtonModule
+    FileCardComponent,
   ],
-  templateUrl: './dashboard-overview.component.html'
+  templateUrl: './dashboard-overview.component.html',
 })
 export class DashboardOverviewComponent implements OnInit {
   constructor(
     protected layout: DashboardLayoutService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
     this.layout.setActiveFirstLevelId('dashboard');
   }
 
-  readonly sumIcon = 'assets/sum.svg';
-
-  /** First-level items EXCEPT dashboard (dashboard is not shown as dataTable) */
-  readonly tableCardItems: FirstLevelNavItem[] = FIRST_LEVEL_ITEMS.filter((i) => i.id !== 'dashboard');
-
-  /** Cache total row per first-level (stable for session) */
-  private totalRowCache = new Map<string, OverviewTotalRow>();
-
-  /** Sort state per card: field + order (1 = asc, -1 = desc) */
-  private sortStateByCard = signal<Map<string, { field: string; order: 1 | -1 }>>(new Map());
-
-  /** Expanded row keys per card (row id -> true when expanded). Used for controlled expansion. */
-  expandedRowKeys = signal<Record<string, boolean>>({});
-
-  readonly sortableFields = ['label', 'recus', 'attribues', 'enTraitement', 'incomplets', 'rappels', 'clotures'] as const;
-
   activeTab = 'journee';
 
-  getTotalRow(firstLevelId: string): OverviewTotalRow {
-    if (!this.totalRowCache.has(firstLevelId)) {
-      this.totalRowCache.set(firstLevelId, buildTotalRow(firstLevelId));
-    }
-    return this.totalRowCache.get(firstLevelId)!;
+  /** Search query from top-bar */
+  searchQuery = signal('');
+
+  /** First-level items EXCEPT dashboard */
+  private readonly navItems: FirstLevelNavItem[] = FIRST_LEVEL_ITEMS.filter(
+    (i) => i.id !== 'dashboard',
+  );
+
+  /** All file cards built from nav config */
+  private allCards = signal<FileCardData[]>(this.buildAllCards());
+
+  /** Normalize string for search matching */
+  private normalize(value: string): string {
+    return value
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
   }
 
-  getSortedDetails(firstLevelId: string): OverviewDetailRow[] {
-    const row = this.getTotalRow(firstLevelId);
-    const state = this.sortStateByCard().get(firstLevelId);
-    if (!state) return row.details;
-    const { field, order } = state;
-    return [...row.details].sort((a, b) => {
-      const aVal = a[field as keyof OverviewDetailRow];
-      const bVal = b[field as keyof OverviewDetailRow];
-      const cmp = typeof aVal === 'string' ? (aVal as string).localeCompare(bVal as string) : (aVal as number) - (bVal as number);
-      return order * cmp;
-    });
+  /** Check if a card matches the current search query */
+  private cardMatchesSearch(card: FileCardData, query: string): boolean {
+    if (!query) return true;
+    const q = this.normalize(query);
+    return (
+      this.normalize(card.title).includes(q) ||
+      this.normalize(card.sectionLabel).includes(q) ||
+      this.normalize(card.id).includes(q)
+    );
   }
 
-  getSortState(firstLevelId: string): { field: string; order: 1 | -1 } | null {
-    return this.sortStateByCard().get(firstLevelId) ?? null;
-  }
+  /** Favorite cards (filtered by search) */
+  favoriteCards = computed(() => {
+    const q = this.searchQuery();
+    return this.allCards().filter((c) => c.favorite && this.cardMatchesSearch(c, q));
+  });
 
-  /** Whether the table for this card is expanded (detail rows visible) */
-  isCardExpanded(firstLevelId: string): boolean {
-    const row = this.getTotalRow(firstLevelId);
-    return this.expandedRowKeys()[row.id] === true;
-  }
+  /** Non-favorite cards, grouped by first-level section (filtered by search) */
+  otherSections = computed<SectionGroup[]>(() => {
+    const q = this.searchQuery();
+    const nonFav = this.allCards().filter((c) => !c.favorite && this.cardMatchesSearch(c, q));
+    return this.navItems
+      .map((nav) => ({
+        id: nav.id,
+        label: nav.label,
+        icon: nav.icon,
+        cards: nonFav.filter((c) => c.sectionIcon === nav.icon && c.sectionLabel === nav.label),
+      }))
+      .filter((g) => g.cards.length > 0);
+  });
 
-  getExpandedRowKeys(firstLevelId: string): Record<string, boolean> {
-    const row = this.getTotalRow(firstLevelId);
-    return this.expandedRowKeys()[row.id] === true ? { [row.id]: true } : {};
-  }
+  /** Whether the search returned no results at all */
+  searchEmpty = computed(() => {
+    const q = this.searchQuery();
+    return q.length > 0 && this.favoriteCards().length === 0 && this.otherSections().length === 0;
+  });
 
-  onRowExpand(firstLevelId: string): void {
-    const row = this.getTotalRow(firstLevelId);
-    this.expandedRowKeys.update((keys) => ({ ...keys, [row.id]: true }));
-  }
+  /** Total count for "Autres files" tag */
+  otherCount = computed(() => this.otherSections().reduce((sum, g) => sum + g.cards.length, 0));
 
-  onRowCollapse(firstLevelId: string): void {
-    const row = this.getTotalRow(firstLevelId);
-    this.expandedRowKeys.update((keys) => {
-      const next = { ...keys };
-      delete next[row.id];
-      return next;
-    });
-  }
+  /** Total count for "Mes files favorites" tag */
+  favoriteCount = computed(() => this.favoriteCards().length);
 
-  onSort(firstLevelId: string, field: string): void {
-    if (!this.isCardExpanded(firstLevelId)) return;
-    const map = new Map(this.sortStateByCard());
-    const current = map.get(firstLevelId);
-    if (current?.field === field) {
-      map.set(firstLevelId, { field, order: (current.order * -1) as 1 | -1 });
-    } else {
-      map.set(firstLevelId, { field, order: 1 });
-    }
-    this.sortStateByCard.set(map);
-  }
-
+  // -----------------------------------------------------------------------
+  // Actions
+  // -----------------------------------------------------------------------
   onTabChange(value: string | number | undefined): void {
     this.activeTab = typeof value === 'string' ? value : 'journee';
   }
 
-  onItemClick(itemId: string): void {
-    if (itemId === 'vue-ensemble') {
-      this.router.navigateByUrl('/dashboard/vue-ensemble');
-      return;
+  onSearch(query: string): void {
+    this.searchQuery.set(query);
+  }
+
+  onFavoriteToggle(itemId: string): void {
+    this.allCards.update((cards) =>
+      cards.map((c) => (c.id === itemId ? { ...c, favorite: !c.favorite } : c)),
+    );
+  }
+
+  onStatusClick(event: { itemId: string; status: string }): void {
+    // No navigation for now
+  }
+
+  // -----------------------------------------------------------------------
+  // Build cards from nav config
+  // -----------------------------------------------------------------------
+  private buildAllCards(): FileCardData[] {
+    const cards: FileCardData[] = [];
+    for (const nav of this.navItems) {
+      const items = getFlatItemsForFirstLevel(nav.id);
+      for (const item of items) {
+        // Prefix with nav id to guarantee uniqueness across sections
+        const uniqueId = `${nav.id}--${item.id}`;
+        cards.push({
+          id: uniqueId,
+          title: item.label,
+          sectionLabel: nav.label,
+          sectionIcon: nav.icon,
+          favorite: INITIAL_FAVORITES.has(uniqueId),
+          ...generateMockValues(item.id),
+        });
+      }
     }
-    if (itemId === 'at-dc-demande') {
-      this.router.navigateByUrl('/');
-      return;
-    }
+    return cards;
   }
 }

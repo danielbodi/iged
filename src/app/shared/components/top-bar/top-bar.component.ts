@@ -17,23 +17,24 @@ import { ExpandableSearchComponent } from '../expandable-search/expandable-searc
     BreadcrumbModule,
     MenuModule,
     OverlayBadgeModule,
-    ExpandableSearchComponent
+    ExpandableSearchComponent,
   ],
-  templateUrl: './top-bar.component.html'
+  templateUrl: './top-bar.component.html',
 })
 export class TopBarComponent {
   private router = inject(Router);
 
   secondLevelExpanded = input(false);
   toggleSecondLevel = output<void>();
+  searchChange = output<string>();
 
   private currentUrl = toSignal(
     this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-      map(event => event.urlAfterRedirects),
-      startWith(this.router.url)
+      map((event) => event.urlAfterRedirects),
+      startWith(this.router.url),
     ),
-    { initialValue: this.router.url }
+    { initialValue: this.router.url },
   );
 
   breadcrumbItems = signal<MenuItem[]>([]);
@@ -42,7 +43,7 @@ export class TopBarComponent {
     { label: 'Mon profil', icon: 'bi bi-person' },
     { label: 'Paramètres', icon: 'bi bi-gear' },
     { separator: true },
-    { label: 'Déconnexion', icon: 'bi bi-box-arrow-right' }
+    { label: 'Déconnexion', icon: 'bi bi-box-arrow-right' },
   ];
 
   /** Notification count for bell */
@@ -66,6 +67,7 @@ export class TopBarComponent {
 
   onSearch(query: string): void {
     this.searchQuery.set(query);
+    this.searchChange.emit(query);
   }
 
   /** Home route used for breadcrumb and logo */
@@ -78,7 +80,7 @@ export class TopBarComponent {
       this.breadcrumbItems.set([
         { label: 'Accueil', routerLink: this.homeRoute },
         { label: 'Dashboard', routerLink: this.homeRoute },
-        { label: "Vue d'ensemble" }
+        { label: "Vue d'ensemble" },
       ]);
       return;
     }
@@ -86,7 +88,7 @@ export class TopBarComponent {
     this.breadcrumbItems.set([
       { label: 'Accueil', routerLink: this.homeRoute },
       { label: 'Indemnités', routerLink: '/' },
-      { label: 'AT & DC - Demande de paiement (IND)' }
+      { label: 'AT & DC - Demande de paiement (IND)' },
     ]);
   }
 }

@@ -1,0 +1,59 @@
+<article
+  class="c-file-card"
+  [class.c-file-card--favorite-bg]="favoriteBg()"
+>
+  <!-- Row 1: Header (tag + star) -->
+  <div class="c-file-card__header">
+    <p-tag severity="secondary" class="c-file-card__section-tag">
+      <i class="bi c-file-card__section-tag-icon" [ngClass]="data().sectionIcon" aria-hidden="true"></i>
+      <span>{{ data().sectionLabel }}</span>
+    </p-tag>
+
+    <button
+      type="button"
+      class="c-file-card__fav-btn"
+      [attr.aria-label]="data().favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'"
+      [attr.aria-pressed]="data().favorite"
+      (click)="onFavoriteClick()"
+    >
+      <i class="bi" [ngClass]="data().favorite ? 'bi-star-fill' : 'bi-star'" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <!-- Row 2: Title -->
+  <h4 class="c-file-card__title">{{ data().title }}</h4>
+
+  <!-- Row 3: Top status labels -->
+  @for (s of topRow; track s.key) {
+    <span class="c-file-card__status-label">{{ s.label }}</span>
+  }
+
+  <!-- Row 4: Top status values -->
+  @for (s of topRow; track s.key) {
+    <div class="c-file-card__status-cell">
+      <p-button
+        [label]="data()[s.key].toString()"
+        [link]="true"
+        styleClass="c-file-card__status-link"
+        (onClick)="onStatusClick(s.key)"
+      />
+    </div>
+  }
+
+  <!-- Row 5: Bottom status labels -->
+  @for (s of bottomRow; track s.key) {
+    <span class="c-file-card__status-label">{{ s.label }}</span>
+  }
+
+  <!-- Row 6: Bottom status values -->
+  @for (s of bottomRow; track s.key) {
+    <div class="c-file-card__status-cell">
+      <p-button
+        [label]="data()[s.key].toString()"
+        [link]="true"
+        styleClass="c-file-card__status-link"
+        (onClick)="onStatusClick(s.key)"
+      />
+    </div>
+  }
+</article>
